@@ -108,7 +108,7 @@ menu_1_pterodactyl() {
                curl -sL https://pterodactyl-installer.se -o ptero.sh
                chmod +x ptero.sh
 
-               # Fixed Here-Doc Sequence (Added second $EMAIL)
+               # Fixed Here-Doc Sequence (Added 'y' and 'no' for the new prompts)
                bash ptero.sh <<EOF
 0
 panel
@@ -125,6 +125,8 @@ $FQDN
 y
 N
 y
+y
+no
 EOF
                
                rm -f ptero.sh
