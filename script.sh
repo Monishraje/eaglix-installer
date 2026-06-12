@@ -284,19 +284,7 @@ menu_4_blueprint() {
                
                echo -e "\n${GREEN}✔ Blueprint Framework Installed Successfully!${NC}"
                pause 
-               ;;
-            2) 
-               # Sub-menu for Local Themes & Extensions
-               Bhai, image_94c5ba.jpg mein saaf dikh raha hai ki tumhare 5 extensions (Nebula, MC Plugins, Server Backgrounds, SubDomains, aur Player Listing) ekdum perfectly install ho gaye hain! Panel ka UI ekdum professional lag raha hai.
-
-Tumhari pichli image (image_9540c0.png) mein maine dekha tha ki tumhare paas 3 aur files bhi thi: huxregister, sagaminecraftplayermanager, aur versionchanger.
-
-Maine un teeno ko bhi script mein Eaglix Cloud Installer ke andar add kar diya hai. Ab tumhare paas total 8 options honge!
-
-Update this section in your script:
-Apne menu_4_blueprint function mein Option 2 wale block ko is naye code se replace kar lo:
-
-Bash
+               ;;            
             2) 
                # Sub-menu for Auto-Downloading & Installing Extensions
                while true; do
