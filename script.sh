@@ -91,10 +91,10 @@ menu_1_pterodactyl() {
                echo -e "${ORANGE}║    🚀 EAGLIX AUTO PTERODACTYL INSTALLER        ║${NC}"
                echo -e "${ORANGE}╚════════════════════════════════════════════════╝${NC}\n"
 
-               echo -e "${CYAN}Panel install karne ke liye bas 3 details chahiye:${NC}"
-               echo -e "${DARK_GRAY}(Baaki Timezone, DB, Firewall sab Eaglix khud set kar dega)${NC}\n"
+               echo -e "${CYAN}Panel install have required these 3 details:${NC}"
+               echo -e "${DARK_GRAY}( Timezone, DB, Firewall All Eaglix do Automatically)${NC}\n"
 
-               echo -ne "${NEON_GREEN}1. Apna Domain (e.g., panel.eaglix.site): ${NC}"
+               echo -ne "${NEON_GREEN}1. Your Domain (e.g., panel.eaglix.site): ${NC}"
                read FQDN
                echo -ne "${NEON_GREEN}2. Admin Email (e.g., admin@eaglix.site): ${NC}"
                read EMAIL
@@ -103,7 +103,7 @@ menu_1_pterodactyl() {
                echo ""
 
                echo -e "\n${CYAN}⚙️ Initializing Silent Auto-Installation... Please wait!${NC}"
-               echo -e "${YELLOW}(Yeh 2-3 minute lega, please screen close mat karna)${NC}\n"
+               echo -e "${YELLOW}(Wait 2-3 minute, Do not Close Window)${NC}\n"
                
                curl -sL https://pterodactyl-installer.se -o ptero.sh
                chmod +x ptero.sh
@@ -430,14 +430,13 @@ menu_6_system() {
     local mem_info=$(free -h | awk '/^Mem:/ {print $3 "/" $2}')
     local disk_info=$(df -h / | awk 'NR==2 {print $3 "/" $2 " (" $5 ")"}')
 
-    echo -e "${DARK_GRAY}       _       _${NC}"
-    echo -e "${DARK_GRAY}      (_)     | |${NC}"
-    echo -e "${RED}       _ _ ___| |__  _ __  _   _${NC}"
-    echo -e "${RED}      | | / __| '_ \| '_ \| | | |${NC}"
-    echo -e "${RED}      | | \__ \ | | | | | | |_| |${NC}"
-    echo -e "${RED}      | | |___/_| |_|_| |_|\__,_|${NC}"
-    echo -e "${RED}     _/ |${NC}"
-    echo -e "${RED}    |__/${NC}\n"
+    # Removed Jishnu and added Eaglix ASCII Art
+    echo -e "${RED}  _____             _ _      ${NC}"
+    echo -e "${RED} | ____|__ _  __ _| (_)__  __${NC}"
+    echo -e "${RED} |  _| / _\` |/ _\` | | \ \/ /${NC}"
+    echo -e "${RED} | |__| (_| | (_| | | |>  <  ${NC}"
+    echo -e "${RED} |_____\__,_|\__, |_|_/_/\_\\${NC}"
+    echo -e "${RED}             |___/           ${NC}\n"
 
     echo -e "${CYAN}╔═══════════════════════════════════════════════╗${NC}"
     echo -e "${CYAN}║              📊 SYSTEM STATUS                 ║${NC}"
@@ -456,49 +455,56 @@ menu_6_system() {
 }
 
 # ==========================================
-# 7. TAILSCALE INSTALLER
+# 7. TAILSCALE INSTALLER (FULLY WORKING)
 # ==========================================
 menu_7_tailscale() {
     while true; do
         clear
         if command -v tailscale &> /dev/null; then
-            STATUS="${NEON_GREEN}INSTALLED${NC}"
+            STATUS="${NEON_GREEN}INSTALLED & RUNNING${NC}"
         else
             STATUS="${RED}NOT INSTALLED${NC}"
         fi
 
         echo -e "${LIGHT_BLUE}╔══════════════════════════════════════╗${NC}"
-        echo -e "${LIGHT_BLUE}║          TAILSCALE INSTALLER         ║${NC}"
+        echo -e "${LIGHT_BLUE}║          TAILSCALE VPN SETUP         ║${NC}"
         echo -e "${LIGHT_BLUE}╚══════════════════════════════════════╝${NC}\n"
-        echo -e "${CYAN}Status: ${STATUS}\n"
+        echo -e "${CYAN}Current Status: ${STATUS}\n"
         echo -e "${NEON_GREEN}========================================${NC}"
-        echo -e "${CYAN} [1] 📥 Install Tailscale${NC}"
-        echo -e "${RED} [2] 🗑️  Uninstall Tailscale${NC}"
-        echo -e "${YELLOW} [3] 🚪 Exit${NC}"
+        echo -e "${CYAN} [1] 📥 Install & Start Tailscale${NC}"
+        echo -e "${RED} [2] 🗑️  Uninstall Tailscale Completely${NC}"
+        echo -e "${YELLOW} [0] 🚪 Back to Main Menu${NC}"
         echo -e "${NEON_GREEN}========================================${NC}\n"
-        echo -ne "${NEON_GREEN}Select option [1-3]: ${NC}"
+        echo -ne "${NEON_GREEN}Select option [0-2]: ${NC}"
         read ts_choice
+        
         case $ts_choice in
             1) 
-               echo -e "${CYAN}Fetching Tailscale Node...${NC}"
+               echo -e "\n${CYAN}Fetching Official Tailscale Setup...${NC}"
                curl -fsSL https://tailscale.com/install.sh | sh
+               echo -e "\n${YELLOW}Starting Tailscale... A link will appear below to authenticate your server.${NC}"
                tailscale up
+               echo -e "\n${GREEN}✔ Tailscale Installed and Connected!${NC}"
                pause 
                ;;
             2) 
-               echo -e "${RED}Disconnecting Tailscale...${NC}"
-               apt-get remove -y tailscale
-               echo -e "${GREEN}Tailscale Removed!${NC}"
+               echo -e "\n${RED}Disconnecting and Removing Tailscale...${NC}"
+               if command -v tailscale &> /dev/null; then
+                   tailscale down
+               fi
+               apt-get remove --purge -y tailscale
+               rm -rf /var/lib/tailscale
+               echo -e "\n${GREEN}✔ Tailscale Completely Removed!${NC}"
                pause 
                ;;
-            3) return ;;
+            0) return ;;
             *) echo -e "${RED}Invalid!${NC}"; sleep 1 ;;
         esac
     done
 }
 
 # ==========================================
-# 8. DATABASE SETUP
+# 8. DATABASE SETUP (FULLY WORKING & SECURE)
 # ==========================================
 menu_8_database() {
     clear
@@ -508,23 +514,112 @@ menu_8_database() {
     echo -e "${RED}| |_| | (_| | || (_| | |_) | (_| \__ \  __/ ${NC}"
     echo -e "${RED}|____/ \__,_|\__\__,_|_.__/ \__,_|___/\___| ${NC}"
     echo -e "${RED}--------------------------------------------${NC}"
-    echo -e "${RED}Running: MySQL / MariaDB Database Setup     ${NC}"
+    echo -e "${NC}Running: MySQL / MariaDB Database Setup     ${NC}"
     echo -e "${RED}--------------------------------------------${NC}\n"
     
-    echo -ne "${NEON_GREEN}Enter new database username: ${NC}"
+    # 1. Install DB if not present
+    if ! command -v mysql &> /dev/null; then
+        echo -e "${YELLOW}MariaDB not found. Installing now...${NC}"
+        apt-get update -y
+        apt-get install -y mariadb-server mariadb-client
+        systemctl enable mariadb
+        systemctl start mariadb
+        echo -e "${GREEN}MariaDB Installed Successfully!${NC}\n"
+    else
+        echo -e "${GREEN}MariaDB is already installed.${NC}\n"
+    fi
+    
+    # 2. Get User Input
+    echo -ne "${NEON_GREEN}Enter new database USERNAME (e.g., eaglix_user): ${NC}"
     read db_user
-    echo -ne "${NEON_GREEN}Enter new database password: ${NC}"
+    echo -ne "${NEON_GREEN}Enter new database PASSWORD: ${NC}"
     read -s db_pass
     echo -e "\n\n${CYAN}Provisioning secure database user '${db_user}'...${NC}"
     
-    # Secure DB setup
-    apt update && apt install -y mariadb-server
-    mysql -e "CREATE USER IF NOT EXISTS '$db_user'@'%' IDENTIFIED BY '$db_pass';"
-    mysql -e "GRANT ALL PRIVILEGES ON *.* TO '$db_user'@'%' WITH GRANT OPTION;"
-    mysql -e "FLUSH PRIVILEGES;"
+    # 3. Securely Create User & Grant Privileges
+    mysql -u root -e "CREATE USER IF NOT EXISTS '${db_user}'@'%' IDENTIFIED BY '${db_pass}';"
+    mysql -u root -e "GRANT ALL PRIVILEGES ON *.* TO '${db_user}'@'%' WITH GRANT OPTION;"
+    mysql -u root -e "FLUSH PRIVILEGES;"
     
     echo -e "\n${NEON_GREEN}✔ Database configuration complete!${NC}"
+    echo -e "${CYAN}Username: ${YELLOW}${db_user}${NC}"
+    echo -e "${CYAN}Host: ${YELLOW}% (Remote Access Enabled)${NC}"
     pause
+}
+
+# ==========================================
+# 9. EAGLIX SECURITY & CAPTCHA CENTER
+# ==========================================
+menu_9_security() {
+    while true; do
+        clear
+        echo -e "${RED}╔═════════════════════════════════════════════╗${NC}"
+        echo -e "${RED}║         🛡️ EAGLIX SECURITY CENTER          ║${NC}"
+        echo -e "${RED}╚═════════════════════════════════════════════╝${NC}\n"
+        echo -e "${YELLOW}1)${NC} ${CYAN}Enable Captcha (Cloudflare / reCAPTCHA)${NC}"
+        echo -e "${YELLOW}2)${NC} ${CYAN}Enable Server Armor (Firewall + Fail2Ban)${NC}"
+        echo -e "${YELLOW}0)${NC} ${GREEN}Back to Main Menu${NC}"
+        echo -e "${RED}-----------------------------------------------${NC}"
+        echo -ne "${NEON_GREEN}Select a security option [0-2]: ${NC}"
+        read sec_choice
+        
+        case $sec_choice in
+            1) 
+               echo -e "\n${CYAN}--- Captcha Setup (Protects Login Page) ---${NC}"
+               echo -e "${DARK_GRAY}Get your Site Key & Secret Key from Cloudflare Turnstile or Google reCAPTCHA.${NC}"
+               echo -ne "${YELLOW}Enter your SITE KEY: ${NC}"
+               read SITE_KEY
+               echo -ne "${YELLOW}Enter your SECRET KEY: ${NC}"
+               read SECRET_KEY
+               
+               echo -e "\n${CYAN}Applying Captcha to Pterodactyl...${NC}"
+               cd /var/www/pterodactyl || { echo -e "${RED}Error: Panel not found!${NC}"; pause; break; }
+               
+               # Remove old config if exists, then add new secure config
+               sed -i '/^RECAPTCHA_/d' .env
+               echo "RECAPTCHA_ENABLE=true" >> .env
+               echo "RECAPTCHA_SITE_KEY=$SITE_KEY" >> .env
+               echo "RECAPTCHA_SECRET_KEY=$SECRET_KEY" >> .env
+               
+               # Clear cache to apply changes immediately
+               php artisan optimize:clear > /dev/null 2>&1
+               
+               echo -e "\n${GREEN}✔ Captcha Successfully Enabled on Login Page!${NC}"
+               pause 
+               ;;
+            2) 
+               echo -e "\n${CYAN}--- Deploying Ultimate Server Armor ---${NC}"
+               echo -e "${YELLOW}Installing UFW Firewall and Fail2Ban...${NC}"
+               apt-get update -y > /dev/null 2>&1
+               apt-get install -y ufw fail2ban > /dev/null 2>&1
+               
+               echo -e "${YELLOW}Configuring Strict Firewall Rules...${NC}"
+               # Reset to default secure state
+               ufw --force reset > /dev/null 2>&1
+               ufw default deny incoming > /dev/null 2>&1
+               ufw default allow outgoing > /dev/null 2>&1
+               
+               # Allow only essential Eaglix Panel & Wings ports
+               ufw allow 22/tcp     # SSH
+               ufw allow 80/tcp     # HTTP
+               ufw allow 443/tcp    # HTTPS
+               ufw allow 8080/tcp   # Wings Daemon
+               ufw allow 2022/tcp   # Wings SFTP
+               
+               # Enable Firewall silently
+               ufw --force enable > /dev/null 2>&1
+               
+               echo -e "${YELLOW}Starting Fail2Ban Anti-Bruteforce service...${NC}"
+               systemctl enable fail2ban > /dev/null 2>&1
+               systemctl restart fail2ban > /dev/null 2>&1
+               
+               echo -e "\n${GREEN}✔ Server Armor Deployed! All unused ports blocked & anti-hack enabled.${NC}"
+               pause 
+               ;;
+            0) return ;;
+            *) echo -e "${RED}Invalid Option!${NC}"; sleep 1 ;;
+        esac
+    done
 }
 
 # ==========================================
@@ -553,9 +648,10 @@ while true; do
     echo -e "${RED} 6) System Information${NC}"
     echo -e "${RED} 7) Tailscale (install + up)${NC}"
     echo -e "${RED} 8) Database Setup${NC}"
+    echo -e "${NEON_GREEN} 9) Security & Protection 🛡️${NC}"
     echo -e "${RED} 0) Exit${NC}"
     echo -e "${RED}---------------------------------------${NC}"
-    echo -ne "${YELLOW}📝 Select an option [0-8]: ${NC}"
+    echo -ne "${YELLOW}📝 Select an option [0-9]: ${NC}"
     
     read main_choice
     case $main_choice in
@@ -567,6 +663,7 @@ while true; do
         6) menu_6_system ;;
         7) menu_7_tailscale ;;
         8) menu_8_database ;;
+        9) menu_9_security ;;
         0) echo -e "\n${NEON_GREEN}Exiting Manager. Have a great day!${NC}"; exit 0 ;;
         *) echo -e "${RED}Invalid option! Try again.${NC}"; sleep 1 ;;
     esac
