@@ -183,7 +183,7 @@ menu_4_blueprint() {
 }
 
 # ==========================================
-# 5. CLOUDFLARE SETUP
+# 5. CLOUDFLARE SETUP (AUTO-TUNNEL)
 # ==========================================
 menu_5_cloudflare() {
     while true; do
@@ -192,7 +192,7 @@ menu_5_cloudflare() {
         echo -e "${ORANGE}║     CLOUDFLARED MANAGEMENT MENU      ║${NC}"
         echo -e "${ORANGE}╠══════════════════════════════════════╣${NC}"
         echo -e "${NEON_GREEN}║${NC}                                      ${NEON_GREEN}║${NC}"
-        echo -e "${NEON_GREEN}║${NC} ${CYAN}1) Install / Setup Tunnel${NC}            ${NEON_GREEN}║${NC}"
+        echo -e "${NEON_GREEN}║${NC} ${CYAN}1) Install & Connect Tunnel${NC}          ${NEON_GREEN}║${NC}"
         echo -e "${NEON_GREEN}║${NC}                                      ${NEON_GREEN}║${NC}"
         echo -e "${NEON_GREEN}║${NC} ${RED}2) Uninstall Completely${NC}              ${NEON_GREEN}║${NC}"
         echo -e "${NEON_GREEN}║${NC}                                      ${NEON_GREEN}║${NC}"
@@ -201,8 +201,25 @@ menu_5_cloudflare() {
         echo -ne "${LIGHT_BLUE}Select an option: ${NC}"
         read cf_choice
         case $cf_choice in
-            1) echo -e "${CYAN}Establishing Secure Tunnel...${NC}"; sleep 3 & spinner $!; pause ;;
-            2) echo -e "${RED}Removing Cloudflared...${NC}"; sleep 2 & spinner $!; pause ;;
+            1) 
+               echo -e "\n${CYAN}Cloudflare Dashboard se Tunnel Token paste karo:${NC}"
+               echo -ne "${YELLOW}-> ${NC}"
+               read CF_TOKEN
+               echo -e "\n${CYAN}Downloading and configuring Cloudflared...${NC}"
+               curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
+               dpkg -i cloudflared.deb
+               cloudflared service install $CF_TOKEN
+               echo -e "\n${NEON_GREEN}✔ Tunnel Successfully Connected to Cloudflare!${NC}"
+               pause 
+               ;;
+            2) 
+               echo -e "${RED}Removing Cloudflare Tunnel...${NC}"
+               cloudflared service uninstall
+               apt-get remove -y cloudflared
+               rm cloudflared.deb
+               echo -e "\n${GREEN}✔ Tunnel Completely Removed!${NC}"
+               pause 
+               ;;
             3) return ;;
             *) echo -e "${RED}Invalid!${NC}"; sleep 1 ;;
         esac
