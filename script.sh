@@ -235,7 +235,7 @@ menu_3_uninstall() {
 }
 
 # ==========================================
-# 4. BLUEPRINT + THEME (FULLY WORKING UI)
+# 4. BLUEPRINT + THEME + EXTENSIONS
 # ==========================================
 menu_4_blueprint() {
     while true; do
@@ -252,11 +252,12 @@ menu_4_blueprint() {
         echo "             |___/           "
         echo -e "${NC}"
         echo -e "${RED}------------------------------------------------${NC}"
-        echo -e "${NC} 1) ${RED}Blueprint Setup${NC}"
-        echo -e "${NC} 2) ${RED}Themes + Extensions${NC}"
+        echo -e "${NC} 1) ${RED}Blueprint Setup (Install)${NC}"
+        echo -e "${NC} 2) ${RED}Themes + Extensions Installer${NC}"
+        echo -e "${NC} 3) ${YELLOW}Update Blueprint (Fix Out-of-date Error)${NC}"
         echo -e "${NC} 0) ${RED}Back to Main Menu${NC}"
         echo -e "${RED}------------------------------------------------${NC}"
-        echo -ne "${YELLOW}📝 Select an option [0-2]: ${NC}"
+        echo -ne "${YELLOW}📝 Select an option [0-3]: ${NC}"
         read suboption
         
         case $suboption in
@@ -267,8 +268,6 @@ menu_4_blueprint() {
                echo -e "${YELLOW}[1/3] Installing Dependencies (NodeJS v22, Yarn, Zip)...${NC}"
                apt-get update -y > /dev/null 2>&1
                apt-get install -y curl zip unzip > /dev/null 2>&1
-               
-               # Yahan setup_20.x ki jagah setup_22.x kar diya hai
                curl -fsSL https://deb.nodesource.com/setup_22.x | bash - > /dev/null 2>&1
                apt-get install -y nodejs > /dev/null 2>&1
                npm install -g yarn > /dev/null 2>&1
@@ -284,7 +283,7 @@ menu_4_blueprint() {
                
                echo -e "\n${GREEN}✔ Blueprint Framework Installed Successfully!${NC}"
                pause 
-               ;;            
+               ;;
             2) 
                # Sub-menu for Auto-Downloading & Installing Extensions
                while true; do
@@ -309,64 +308,60 @@ menu_4_blueprint() {
                    case $theme_choice in
                        1) 
                           echo -e "\n${CYAN}Downloading & Installing Nebula Theme...${NC}"
-                          cd /var/www/pterodactyl
-                          wget -q https://eaglix-installer.netlify.app/nebula.blueprint -O nebula.blueprint
-                          blueprint -install nebula.blueprint
-                          pause 
-                          ;;
+                          cd /var/www/pterodactyl && wget -q https://eaglix-installer.netlify.app/nebula.blueprint -O nebula.blueprint && blueprint -install nebula.blueprint
+                          pause ;;
                        2) 
                           echo -e "\n${CYAN}Downloading & Installing MC Plugins...${NC}"
-                          cd /var/www/pterodactyl
-                          wget -q https://eaglix-installer.netlify.app/mcplugins.blueprint -O mcplugins.blueprint
-                          blueprint -install mcplugins.blueprint
-                          pause 
-                          ;;
+                          cd /var/www/pterodactyl && wget -q https://eaglix-installer.netlify.app/mcplugins.blueprint -O mcplugins.blueprint && blueprint -install mcplugins.blueprint
+                          pause ;;
                        3) 
                           echo -e "\n${CYAN}Downloading & Installing Server Backgrounds...${NC}"
-                          cd /var/www/pterodactyl
-                          wget -q https://eaglix-installer.netlify.app/serverbackgrounds.blueprint -O serverbackgrounds.blueprint
-                          blueprint -install serverbackgrounds.blueprint
-                          pause 
-                          ;;
+                          cd /var/www/pterodactyl && wget -q https://eaglix-installer.netlify.app/serverbackgrounds.blueprint -O serverbackgrounds.blueprint && blueprint -install serverbackgrounds.blueprint
+                          pause ;;
                        4) 
                           echo -e "\n${CYAN}Downloading & Installing Subdomains...${NC}"
-                          cd /var/www/pterodactyl
-                          wget -q https://eaglix-installer.netlify.app/subdomains.blueprint -O subdomains.blueprint
-                          blueprint -install subdomains.blueprint
-                          pause 
-                          ;;
+                          cd /var/www/pterodactyl && wget -q https://eaglix-installer.netlify.app/subdomains.blueprint -O subdomains.blueprint && blueprint -install subdomains.blueprint
+                          pause ;;
                        5) 
                           echo -e "\n${CYAN}Downloading & Installing Player Listing...${NC}"
-                          cd /var/www/pterodactyl
-                          wget -q https://eaglix-installer.netlify.app/playerlisting.blueprint -O playerlisting.blueprint
-                          blueprint -install playerlisting.blueprint
-                          pause 
-                          ;;
+                          cd /var/www/pterodactyl && wget -q https://eaglix-installer.netlify.app/playerlisting.blueprint -O playerlisting.blueprint && blueprint -install playerlisting.blueprint
+                          pause ;;
                        6) 
                           echo -e "\n${CYAN}Downloading & Installing Hux Register...${NC}"
-                          cd /var/www/pterodactyl
-                          wget -q https://eaglix-installer.netlify.app/huxregister.blueprint -O huxregister.blueprint
-                          blueprint -install huxregister.blueprint
-                          pause 
-                          ;;
+                          cd /var/www/pterodactyl && wget -q https://eaglix-installer.netlify.app/huxregister.blueprint -O huxregister.blueprint && blueprint -install huxregister.blueprint
+                          pause ;;
                        7) 
                           echo -e "\n${CYAN}Downloading & Installing Saga MC Player Manager...${NC}"
-                          cd /var/www/pterodactyl
-                          wget -q https://eaglix-installer.netlify.app/sagaminecraftplayermanager.blueprint -O sagaminecraftplayermanager.blueprint
-                          blueprint -install sagaminecraftplayermanager.blueprint
-                          pause 
-                          ;;
+                          cd /var/www/pterodactyl && wget -q https://eaglix-installer.netlify.app/sagaminecraftplayermanager.blueprint -O sagaminecraftplayermanager.blueprint && blueprint -install sagaminecraftplayermanager.blueprint
+                          pause ;;
                        8) 
                           echo -e "\n${CYAN}Downloading & Installing Version Changer...${NC}"
-                          cd /var/www/pterodactyl
-                          wget -q https://eaglix-installer.netlify.app/versionchanger.blueprint -O versionchanger.blueprint
-                          blueprint -install versionchanger.blueprint
-                          pause 
-                          ;;
+                          cd /var/www/pterodactyl && wget -q https://eaglix-installer.netlify.app/versionchanger.blueprint -O versionchanger.blueprint && blueprint -install versionchanger.blueprint
+                          pause ;;
                        0) break ;;
                        *) echo -e "${RED}Invalid!${NC}"; sleep 1 ;;
                    esac
                done
+               ;;
+            3)
+               echo -e "\n${CYAN}🚀 Upgrading Blueprint to the latest version...${NC}"
+               if [ ! -d "/var/www/pterodactyl" ]; then
+                   echo -e "${RED}Error: Pterodactyl directory not found! Is the panel installed?${NC}"
+                   pause
+                   continue
+               fi
+               
+               cd /var/www/pterodactyl
+               
+               if ! command -v blueprint &> /dev/null; then
+                   echo -e "${RED}Error: Blueprint is not installed yet! Please run Setup (Option 1) first.${NC}"
+               else
+                   echo -e "${YELLOW}Running upgrade process. This might take a minute...${NC}"
+                   blueprint -upgrade
+                   echo -e "\n${GREEN}✔ Blueprint Upgrade Complete!${NC}"
+                   echo -e "${CYAN}Please Hard Refresh (Ctrl+Shift+R) your panel to clear the warning banner.${NC}"
+               fi
+               pause
                ;;
             0) return ;;
             *) echo -e "${RED}Invalid!${NC}"; sleep 1 ;;
