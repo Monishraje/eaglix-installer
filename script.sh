@@ -68,7 +68,7 @@ check_dependencies() {
 check_dependencies
 
 # ==========================================
-# 1. PTERODACTYL CONTROL CENTER
+# 1. PTERODACTYL CONTROL CENTER (AUTO)
 # ==========================================
 menu_1_pterodactyl() {
     while true; do
@@ -76,7 +76,7 @@ menu_1_pterodactyl() {
         echo -e "${ORANGE}╔════════════════════════════════════════════════╗${NC}"
         echo -e "${ORANGE}║    🦖 PTERODACTYL CONTROL CENTER               ║${NC}"
         echo -e "${ORANGE}╠════════════════════════════════════════════════╝${NC}"
-        echo -e "${NEON_GREEN}║${NC} ${CYAN}1) Install Panel${NC}"
+        echo -e "${NEON_GREEN}║${NC} ${CYAN}1) Auto-Install Panel (1-Click)${NC}"
         echo -e "${NEON_GREEN}║${NC} ${LIGHT_BLUE}2) Create Panel User${NC}"
         echo -e "${NEON_GREEN}║${NC} ${ORANGE}3) Update Panel${NC}"
         echo -e "${NEON_GREEN}║${NC} ${RED}4) Uninstall Panel${NC}"
@@ -86,15 +86,72 @@ menu_1_pterodactyl() {
         read ptero_choice
         case $ptero_choice in
             1) 
-               echo -e "${CYAN}Initializing Panel Installation...${NC}"
-               # Spinner hataya gaya hai taaki Pterodactyl ka menu theek se dikhe
-               bash <(curl -s https://pterodactyl-installer.se)
-               echo -e "\n${GREEN}✔ Installation Finished!${NC}"
+               clear
+               echo -e "${ORANGE}╔════════════════════════════════════════════════╗${NC}"
+               echo -e "${ORANGE}║    🚀 EAGLIX AUTO PTERODACTYL INSTALLER        ║${NC}"
+               echo -e "${ORANGE}╚════════════════════════════════════════════════╝${NC}\n"
+
+               echo -e "${CYAN}Panel install karne ke liye bas 3 details chahiye:${NC}"
+               echo -e "${DARK_GRAY}(Baaki Timezone, DB, Firewall sab Eaglix khud set kar dega)${NC}\n"
+
+               echo -ne "${NEON_GREEN}1. Apna Domain (e.g., panel.eaglix.site): ${NC}"
+               read FQDN
+               echo -ne "${NEON_GREEN}2. Admin Email (e.g., admin@eaglix.site): ${NC}"
+               read EMAIL
+               echo -ne "${NEON_GREEN}3. Admin Password (minimum 8 chars): ${NC}"
+               read -s PASSWORD
+               echo ""
+
+               echo -e "\n${CYAN}⚙️ Initializing Silent Auto-Installation... Please wait!${NC}"
+               echo -e "${YELLOW}(Yeh 2-3 minute lega, please screen close mat karna)${NC}\n"
+               
+               # Download the official script
+               curl -sL https://pterodactyl-installer.se -o ptero.sh
+               chmod +x ptero.sh
+
+               # Auto-filling all the prompts smoothly using Here-Doc
+               bash ptero.sh <<EOF
+0
+panel
+pterodactyl
+
+Asia/Kolkata
+$EMAIL
+admin
+Eaglix
+Admin
+$PASSWORD
+$FQDN
+y
+N
+y
+EOF
+               
+               rm ptero.sh
+               echo -e "\n${NEON_GREEN}✔ Pterodactyl Panel Auto-Installation Finished!${NC}"
+               echo -e "${CYAN}🌍 Your Panel URL: ${YELLOW}http://$FQDN${NC} (Add Cloudflare Tunnel for HTTPS)"
+               echo -e "${CYAN}👤 Username: ${YELLOW}admin${NC}"
                pause 
                ;;
-            2) echo -e "${LIGHT_BLUE}Creating User...${NC}"; sleep 2 & spinner $!; pause ;;
-            3) echo -e "${ORANGE}Updating Panel...${NC}"; sleep 2 & spinner $!; pause ;;
-            4) echo -e "${RED}Uninstalling Panel...${NC}"; sleep 2 & spinner $!; pause ;;
+            2) 
+               echo -e "${LIGHT_BLUE}Creating User...${NC}"
+               cd /var/www/pterodactyl && php artisan p:user:make
+               pause 
+               ;;
+            3) 
+               echo -e "${ORANGE}Updating Panel...${NC}"
+               curl -sL https://pterodactyl-installer.se -o ptero.sh && bash ptero.sh <<EOF
+2
+EOF
+               rm ptero.sh
+               pause 
+               ;;
+            4) 
+               echo -e "${RED}Uninstalling Panel...${NC}"
+               rm -rf /var/www/pterodactyl
+               echo -e "${GREEN}Panel Files Removed!${NC}"
+               pause 
+               ;;
             5) return ;;
             *) echo -e "${RED}Invalid!${NC}"; sleep 1 ;;
         esac
@@ -110,8 +167,18 @@ menu_2_wings() {
     echo -e "${CYAN}      WINGS INSTALLATION MANAGER        ${NC}"
     echo -e "${MAGENTA}========================================${NC}"
     echo -e "${NEON_GREEN}Fetching official Wings setup...${NC}"
-    # Yahan se bhi comment aur spinner hataya gaya hai actual setup ke liye
-    bash <(curl -s https://pterodactyl-installer.se)
+    
+    curl -sL https://pterodactyl-installer.se -o ptero.sh
+    chmod +x ptero.sh
+    # Auto install Wings silently
+    bash ptero.sh <<EOF
+1
+y
+N
+y
+EOF
+    rm ptero.sh
+
     echo -e "\n${GREEN}✔ Wings configured successfully!${NC}"
     pause
 }
@@ -138,9 +205,26 @@ menu_3_uninstall() {
         echo -ne "${ORANGE}Choose an option [0-3]: ${NC}"
         read un_choice
         case $un_choice in
-            1) echo -e "${RED}Purging Panel...${NC}"; sleep 2 & spinner $!; pause ;;
-            2) echo -e "${RED}Purging Wings...${NC}"; sleep 2 & spinner $!; pause ;;
-            3) echo -e "${RED}Nuking Both...${NC}"; sleep 3 & spinner $!; pause ;;
+            1) 
+               echo -e "${RED}Purging Panel...${NC}"
+               rm -rf /var/www/pterodactyl /etc/pterodactyl
+               echo -e "${GREEN}Panel completely removed.${NC}"
+               pause 
+               ;;
+            2) 
+               echo -e "${RED}Purging Wings...${NC}"
+               systemctl stop wings
+               rm -rf /etc/pterodactyl/wings.yml /usr/local/bin/wings /var/lib/pterodactyl
+               echo -e "${GREEN}Wings completely removed.${NC}"
+               pause 
+               ;;
+            3) 
+               echo -e "${RED}Nuking Both Panel & Wings...${NC}"
+               rm -rf /var/www/pterodactyl /etc/pterodactyl /var/lib/pterodactyl /usr/local/bin/wings
+               systemctl stop wings
+               echo -e "${GREEN}Everything Removed!${NC}"
+               pause 
+               ;;
             0) return ;;
             *) echo -e "${RED}Invalid!${NC}"; sleep 1 ;;
         esac
@@ -183,7 +267,7 @@ menu_4_blueprint() {
 }
 
 # ==========================================
-# 5. CLOUDFLARE SETUP (AUTO-TUNNEL)
+# 5. CLOUDFLARE SETUP (FUNCTIONAL)
 # ==========================================
 menu_5_cloudflare() {
     while true; do
@@ -216,7 +300,7 @@ menu_5_cloudflare() {
                echo -e "${RED}Removing Cloudflare Tunnel...${NC}"
                cloudflared service uninstall
                apt-get remove -y cloudflared
-               rm cloudflared.deb
+               rm -f cloudflared.deb
                echo -e "\n${GREEN}✔ Tunnel Completely Removed!${NC}"
                pause 
                ;;
@@ -288,8 +372,18 @@ menu_7_tailscale() {
         echo -ne "${NEON_GREEN}Select option [1-3]: ${NC}"
         read ts_choice
         case $ts_choice in
-            1) echo -e "${CYAN}Fetching Tailscale Node...${NC}"; curl -fsSL https://tailscale.com/install.sh | sh; tailscale up; pause ;;
-            2) echo -e "${RED}Disconnecting Tailscale...${NC}"; sleep 2 & spinner $!; pause ;;
+            1) 
+               echo -e "${CYAN}Fetching Tailscale Node...${NC}"
+               curl -fsSL https://tailscale.com/install.sh | sh
+               tailscale up
+               pause 
+               ;;
+            2) 
+               echo -e "${RED}Disconnecting Tailscale...${NC}"
+               apt-get remove -y tailscale
+               echo -e "${GREEN}Tailscale Removed!${NC}"
+               pause 
+               ;;
             3) return ;;
             *) echo -e "${RED}Invalid!${NC}"; sleep 1 ;;
         esac
@@ -315,7 +409,13 @@ menu_8_database() {
     echo -ne "${NEON_GREEN}Enter new database password: ${NC}"
     read -s db_pass
     echo -e "\n\n${CYAN}Provisioning secure database user '${db_user}'...${NC}"
-    sleep 3 & spinner $!
+    
+    # Secure DB setup
+    apt update && apt install -y mariadb-server
+    mysql -e "CREATE USER IF NOT EXISTS '$db_user'@'%' IDENTIFIED BY '$db_pass';"
+    mysql -e "GRANT ALL PRIVILEGES ON *.* TO '$db_user'@'%' WITH GRANT OPTION;"
+    mysql -e "FLUSH PRIVILEGES;"
+    
     echo -e "\n${NEON_GREEN}✔ Database configuration complete!${NC}"
     pause
 }
