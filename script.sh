@@ -548,72 +548,96 @@ menu_8_database() {
 }
 
 # ==========================================
-# 9. EAGLIX SECURITY & CAPTCHA CENTER
+# 9. EAGLIX SECURITY & ANTI-DDOS CENTER
 # ==========================================
 menu_9_security() {
     while true; do
         clear
-        echo -e "${RED}╔═════════════════════════════════════════════╗${NC}"
-        echo -e "${RED}║         🛡️ EAGLIX SECURITY CENTER          ║${NC}"
-        echo -e "${RED}╚═════════════════════════════════════════════╝${NC}\n"
-        echo -e "${YELLOW}1)${NC} ${CYAN}Enable Captcha (Cloudflare / reCAPTCHA)${NC}"
-        echo -e "${YELLOW}2)${NC} ${CYAN}Enable Server Armor (Firewall + Fail2Ban)${NC}"
+        echo -e "${RED}╔═════════════════════════════════════════════════════╗${NC}"
+        echo -e "${RED}║        🛡️ EAGLIX ULTIMATE SECURITY CENTER          ║${NC}"
+        echo -e "${RED}╚═════════════════════════════════════════════════════╝${NC}\n"
+        echo -e "${YELLOW}1)${NC} ${CYAN}Enable Google reCAPTCHA v2 (100% Working Login Fix)${NC}"
+        echo -e "${YELLOW}2)${NC} ${CYAN}Deploy HARD DDoS Armor (UFW Limits + SYN Protection)${NC}"
         echo -e "${YELLOW}0)${NC} ${GREEN}Back to Main Menu${NC}"
-        echo -e "${RED}-----------------------------------------------${NC}"
+        echo -e "${RED}-------------------------------------------------------${NC}"
         echo -ne "${NEON_GREEN}Select a security option [0-2]: ${NC}"
         read sec_choice
         
         case $sec_choice in
             1) 
-               echo -e "\n${CYAN}--- Captcha Setup (Protects Login Page) ---${NC}"
-               echo -e "${DARK_GRAY}Get your Site Key & Secret Key from Cloudflare Turnstile or Google reCAPTCHA.${NC}"
-               echo -ne "${YELLOW}Enter your SITE KEY: ${NC}"
+               echo -e "\n${CYAN}--- Pterodactyl Captcha Setup ---${NC}"
+               echo -e "${YELLOW}⚠️ IMPORTANT: Only use Google reCAPTCHA v2 (Invisible or Checkbox) keys!${NC}"
+               echo -e "${DARK_GRAY}Get them from: https://www.google.com/recaptcha/admin/create${NC}\n"
+               
+               echo -ne "${YELLOW}Enter your Google SITE KEY: ${NC}"
                read SITE_KEY
-               echo -ne "${YELLOW}Enter your SECRET KEY: ${NC}"
+               echo -ne "${YELLOW}Enter your Google SECRET KEY: ${NC}"
                read SECRET_KEY
                
-               echo -e "\n${CYAN}Applying Captcha to Pterodactyl...${NC}"
-               cd /var/www/pterodactyl || { echo -e "${RED}Error: Panel not found!${NC}"; pause; break; }
+               echo -e "\n${CYAN}Injecting Captcha deeply into Pterodactyl...${NC}"
                
-               # Remove old config if exists, then add new secure config
+               if [ ! -d "/var/www/pterodactyl" ]; then
+                   echo -e "${RED}Error: Pterodactyl directory not found!${NC}"
+                   pause
+                   continue
+               fi
+
+               cd /var/www/pterodactyl
+               
+               # 1. Clean any existing/broken captcha configs
                sed -i '/^RECAPTCHA_/d' .env
+               
+               # 2. Inject fresh, working configs
                echo "RECAPTCHA_ENABLE=true" >> .env
                echo "RECAPTCHA_SITE_KEY=$SITE_KEY" >> .env
                echo "RECAPTCHA_SECRET_KEY=$SECRET_KEY" >> .env
                
-               # Clear cache to apply changes immediately
+               # 3. Deep clear cache to ensure panel reads the new keys
+               php artisan view:clear > /dev/null 2>&1
+               php artisan config:clear > /dev/null 2>&1
                php artisan optimize:clear > /dev/null 2>&1
                
-               echo -e "\n${GREEN}✔ Captcha Successfully Enabled on Login Page!${NC}"
+               echo -e "\n${GREEN}✔ Google reCAPTCHA Successfully Enabled! Login page is now secure.${NC}"
                pause 
                ;;
             2) 
-               echo -e "\n${CYAN}--- Deploying Ultimate Server Armor ---${NC}"
-               echo -e "${YELLOW}Installing UFW Firewall and Fail2Ban...${NC}"
+               echo -e "\n${CYAN}--- Deploying HARD DDoS Server Armor ---${NC}"
+               sleep 1
+               
+               echo -e "${YELLOW}[1/4] Installing UFW Firewall and Fail2Ban...${NC}"
                apt-get update -y > /dev/null 2>&1
                apt-get install -y ufw fail2ban > /dev/null 2>&1
                
-               echo -e "${YELLOW}Configuring Strict Firewall Rules...${NC}"
-               # Reset to default secure state
+               echo -e "${YELLOW}[2/4] Configuring Anti-DDoS Rate Limiting...${NC}"
                ufw --force reset > /dev/null 2>&1
                ufw default deny incoming > /dev/null 2>&1
                ufw default allow outgoing > /dev/null 2>&1
                
-               # Allow only essential Eaglix Panel & Wings ports
-               ufw allow 22/tcp     # SSH
-               ufw allow 80/tcp     # HTTP
-               ufw allow 443/tcp    # HTTPS
+               # Using 'limit' instead of 'allow' for web ports to prevent connection flooding
+               ufw limit 22/tcp     # SSH (Rate limited)
+               ufw limit 80/tcp     # HTTP (Rate limited)
+               ufw limit 443/tcp    # HTTPS (Rate limited)
                ufw allow 8080/tcp   # Wings Daemon
                ufw allow 2022/tcp   # Wings SFTP
                
-               # Enable Firewall silently
                ufw --force enable > /dev/null 2>&1
                
-               echo -e "${YELLOW}Starting Fail2Ban Anti-Bruteforce service...${NC}"
+               echo -e "${YELLOW}[3/4] Hardening Kernel against SYN Floods & Spoofing...${NC}"
+               # Add kernel level DDoS protection
+               cat <<EOF >> /etc/sysctl.conf
+# Eaglix Anti-DDoS Tweak
+net.ipv4.tcp_syncookies = 1
+net.ipv4.tcp_max_syn_backlog = 2048
+net.ipv4.tcp_synack_retries = 2
+net.ipv4.conf.all.rp_filter = 1
+EOF
+               sysctl -p > /dev/null 2>&1
+               
+               echo -e "${YELLOW}[4/4] Starting Fail2Ban Anti-Bruteforce...${NC}"
                systemctl enable fail2ban > /dev/null 2>&1
                systemctl restart fail2ban > /dev/null 2>&1
                
-               echo -e "\n${GREEN}✔ Server Armor Deployed! All unused ports blocked & anti-hack enabled.${NC}"
+               echo -e "\n${GREEN}✔ HARD DDoS Armor Deployed! Server is now highly resistant to attacks.${NC}"
                pause 
                ;;
             0) return ;;
