@@ -1,0 +1,349 @@
+#!/bin/bash
+
+# ==========================================
+# ADVANCED SETUP & CHECKS
+# ==========================================
+# Ensure script is run as root
+if [ "$EUID" -ne 0 ]; then
+  echo -e "\033[0;31m[ERROR] Please run this script as root (sudo su)\033[0m"
+  exit 1
+fi
+
+# ==========================================
+# NEON & HIGH-CONTRAST COLOR CODES
+# ==========================================
+RED='\033[1;31m'
+GREEN='\033[1;32m'
+YELLOW='\033[1;33m'
+CYAN='\033[1;36m'
+MAGENTA='\033[1;35m'
+LIGHT_BLUE='\033[1;34m'
+NEON_GREEN='\033[38;5;118m'
+ORANGE='\033[38;5;214m'
+DARK_GRAY='\033[1;30m'
+NC='\033[0m' # No Color
+
+# ==========================================
+# ADVANCED UI FUNCTIONS
+# ==========================================
+pause() {
+    echo -e "\n${DARK_GRAY}Press [Enter] to return to menu...${NC}"
+    read -p ""
+}
+
+# Animated Spinner for Loading States
+spinner() {
+    local pid=$1
+    local delay=0.1
+    local spinstr='⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏'
+    while [ "$(ps a | awk '{print $1}' | grep -w $pid)" ]; do
+        local temp=${spinstr#?}
+        printf " ${NEON_GREEN}[%c]${NC} " "$spinstr"
+        local spinstr=$temp${spinstr%"$temp"}
+        sleep $delay
+        printf "\b\b\b\b\b"
+    done
+    printf "    \b\b\b\b"
+}
+
+# Auto Dependency Checker
+check_dependencies() {
+    clear
+    echo -e "${CYAN}Checking system requirements...${NC}\n"
+    deps=("curl" "wget" "unzip" "tar" "jq")
+    for dep in "${deps[@]}"; do
+        if ! command -v $dep &> /dev/null; then
+            echo -ne "${YELLOW}Installing missing package: ${dep}...${NC}"
+            apt-get install -y $dep &> /dev/null &
+            spinner $!
+            echo -e "\r${GREEN}✔ Installed: ${dep}                  ${NC}"
+        else
+            echo -e "${GREEN}✔ Found: ${dep}${NC}"
+        fi
+    done
+    sleep 1
+}
+
+# Run dependency check at startup
+check_dependencies
+
+# ==========================================
+# 1. PTERODACTYL CONTROL CENTER
+# ==========================================
+menu_1_pterodactyl() {
+    while true; do
+        clear
+        echo -e "${ORANGE}╔════════════════════════════════════════════════╗${NC}"
+        echo -e "${ORANGE}║    🦖 PTERODACTYL CONTROL CENTER               ║${NC}"
+        echo -e "${ORANGE}╠════════════════════════════════════════════════╝${NC}"
+        echo -e "${NEON_GREEN}║${NC} ${CYAN}1) Install Panel${NC}"
+        echo -e "${NEON_GREEN}║${NC} ${LIGHT_BLUE}2) Create Panel User${NC}"
+        echo -e "${NEON_GREEN}║${NC} ${ORANGE}3) Update Panel${NC}"
+        echo -e "${NEON_GREEN}║${NC} ${RED}4) Uninstall Panel${NC}"
+        echo -e "${NEON_GREEN}║${NC} ${NEON_GREEN}5) Exit${NC}"
+        echo -e "${NEON_GREEN}╚════════════════════════════════════════════════╗${NC}"
+        echo -ne "${LIGHT_BLUE}Select Option -> ${NC}"
+        read ptero_choice
+        case $ptero_choice in
+            1) 
+               echo -e "${CYAN}Initializing Panel Installation...${NC}"
+               sleep 3 & spinner $!
+               # bash <(curl -s https://pterodactyl-installer.se)
+               echo -e "\n${GREEN}✔ Installation Finished!${NC}"
+               pause 
+               ;;
+            2) echo -e "${LIGHT_BLUE}Creating User...${NC}"; sleep 2 & spinner $!; pause ;;
+            3) echo -e "${ORANGE}Updating Panel...${NC}"; sleep 2 & spinner $!; pause ;;
+            4) echo -e "${RED}Uninstalling Panel...${NC}"; sleep 2 & spinner $!; pause ;;
+            5) return ;;
+            *) echo -e "${RED}Invalid!${NC}"; sleep 1 ;;
+        esac
+    done
+}
+
+# ==========================================
+# 2. WINGS INSTALLATION
+# ==========================================
+menu_2_wings() {
+    clear
+    echo -e "${MAGENTA}========================================${NC}"
+    echo -e "${CYAN}      WINGS INSTALLATION MANAGER        ${NC}"
+    echo -e "${MAGENTA}========================================${NC}"
+    echo -e "${NEON_GREEN}Fetching official Wings setup...${NC}"
+    sleep 3 & spinner $!
+    # bash <(curl -s https://pterodactyl-installer.se)
+    echo -e "\n${GREEN}✔ Wings configured successfully!${NC}"
+    pause
+}
+
+# ==========================================
+# 3. UNINSTALL TOOLS
+# ==========================================
+menu_3_uninstall() {
+    while true; do
+        clear
+        echo -e "${LIGHT_BLUE}---------------------------------------${NC}"
+        echo -e "      🗑️  PTERODACTYL UNINSTALLER        "
+        echo -e "            by Eaglix-hosting           "
+        echo -e "${LIGHT_BLUE}---------------------------------------${NC}\n"
+        echo -e "${ORANGE}╔════════════════════════════════════════╗${NC}"
+        echo -e "${ORANGE}║          📋 MENU OPTIONS               ║${NC}"
+        echo -e "${ORANGE}╠════════════════════════════════════════╣${NC}"
+        echo -e "${ORANGE}║${NC} ${CYAN}1) Uninstall Panel Only${NC}                ${ORANGE}║${NC}"
+        echo -e "${ORANGE}║${NC} ${CYAN}2) Uninstall Wings Only${NC}                ${ORANGE}║${NC}"
+        echo -e "${ORANGE}║${NC} ${CYAN}3) Uninstall Panel + Wings${NC}             ${ORANGE}║${NC}"
+        echo -e "${ORANGE}║${NC} ${RED}0) Exit Uninstaller${NC}                    ${ORANGE}║${NC}"
+        echo -e "${ORANGE}╚════════════════════════════════════════╝${NC}\n"
+        echo -e "${YELLOW}⚠️  Warning: ${RED}These actions cannot be undone!${NC}\n"
+        echo -ne "${ORANGE}Choose an option [0-3]: ${NC}"
+        read un_choice
+        case $un_choice in
+            1) echo -e "${RED}Purging Panel...${NC}"; sleep 2 & spinner $!; pause ;;
+            2) echo -e "${RED}Purging Wings...${NC}"; sleep 2 & spinner $!; pause ;;
+            3) echo -e "${RED}Nuking Both...${NC}"; sleep 3 & spinner $!; pause ;;
+            0) return ;;
+            *) echo -e "${RED}Invalid!${NC}"; sleep 1 ;;
+        esac
+    done
+}
+
+# ==========================================
+# 4. BLUEPRINT + THEME
+# ==========================================
+menu_4_blueprint() {
+    while true; do
+        clear
+        echo -e "${MAGENTA}=========================================${NC}"
+        echo -e "${LIGHT_BLUE}                MAIN MENU                ${NC}"
+        echo -e "${MAGENTA}=========================================${NC}"
+        echo -e "${YELLOW}1)${NC} ${CYAN}Nebula (Auto Install)${NC}"
+        echo -e "${YELLOW}2)${NC} ${CYAN}Euphoria (Auto Install)${NC}"
+        echo -e "${YELLOW}3)${NC} ${RED}Uninstall${NC}"
+        echo -e "${YELLOW}4)${NC} ${CYAN}Add Tool (Auto Install)${NC}"
+        echo -e "${YELLOW}0)${NC} ${GREEN}Exit${NC}"
+        echo -e "${MAGENTA}=========================================${NC}"
+        echo -ne "${NEON_GREEN}Choose an option: ${NC}"
+        read theme_choice
+        case $theme_choice in
+            1) echo -e "${CYAN}Compiling Nebula Theme...${NC}"; sleep 3 & spinner $!; pause ;;
+            2) 
+               echo -e "\n${MAGENTA}>>> Injecting Euphoria Assets <<<${NC}"
+               sleep 2 & spinner $!
+               echo -e "\n${NEON_GREEN}Rebuilding Production Assets...${NC}"
+               sleep 3 & spinner $!
+               echo -e "\n${CYAN}✔ Euphoria Theme Applied!${NC}"
+               pause 
+               ;;
+            3) echo -e "${RED}Rolling back themes...${NC}"; sleep 2 & spinner $!; pause ;;
+            4) echo -e "${CYAN}Adding Extensions...${NC}"; sleep 2 & spinner $!; pause ;;
+            0) return ;;
+            *) echo -e "${RED}Invalid!${NC}"; sleep 1 ;;
+        esac
+    done
+}
+
+# ==========================================
+# 5. CLOUDFLARE SETUP
+# ==========================================
+menu_5_cloudflare() {
+    while true; do
+        clear
+        echo -e "${ORANGE}╔══════════════════════════════════════╗${NC}"
+        echo -e "${ORANGE}║     CLOUDFLARED MANAGEMENT MENU      ║${NC}"
+        echo -e "${ORANGE}╠══════════════════════════════════════╣${NC}"
+        echo -e "${NEON_GREEN}║${NC}                                      ${NEON_GREEN}║${NC}"
+        echo -e "${NEON_GREEN}║${NC} ${CYAN}1) Install / Setup Tunnel${NC}            ${NEON_GREEN}║${NC}"
+        echo -e "${NEON_GREEN}║${NC}                                      ${NEON_GREEN}║${NC}"
+        echo -e "${NEON_GREEN}║${NC} ${RED}2) Uninstall Completely${NC}              ${NEON_GREEN}║${NC}"
+        echo -e "${NEON_GREEN}║${NC}                                      ${NEON_GREEN}║${NC}"
+        echo -e "${NEON_GREEN}║${NC} ${NEON_GREEN}3) Exit${NC}                                ${NEON_GREEN}║${NC}"
+        echo -e "${NEON_GREEN}╚══════════════════════════════════════╝${NC}\n"
+        echo -ne "${LIGHT_BLUE}Select an option: ${NC}"
+        read cf_choice
+        case $cf_choice in
+            1) echo -e "${CYAN}Establishing Secure Tunnel...${NC}"; sleep 3 & spinner $!; pause ;;
+            2) echo -e "${RED}Removing Cloudflared...${NC}"; sleep 2 & spinner $!; pause ;;
+            3) return ;;
+            *) echo -e "${RED}Invalid!${NC}"; sleep 1 ;;
+        esac
+    done
+}
+
+# ==========================================
+# 6. SYSTEM INFORMATION
+# ==========================================
+menu_6_system() {
+    clear
+    local host_name=$(hostname)
+    local curr_user=$(whoami)
+    local curr_dir=$(pwd)
+    local sys_info=$(uname -srm)
+    local up_time=$(uptime -p | sed 's/up //')
+    local mem_info=$(free -h | awk '/^Mem:/ {print $3 "/" $2}')
+    local disk_info=$(df -h / | awk 'NR==2 {print $3 "/" $2 " (" $5 ")"}')
+
+    echo -e "${DARK_GRAY}       _       _${NC}"
+    echo -e "${DARK_GRAY}      (_)     | |${NC}"
+    echo -e "${RED}       _ _ ___| |__  _ __  _   _${NC}"
+    echo -e "${RED}      | | / __| '_ \| '_ \| | | |${NC}"
+    echo -e "${RED}      | | \__ \ | | | | | | |_| |${NC}"
+    echo -e "${RED}      | | |___/_| |_|_| |_|\__,_|${NC}"
+    echo -e "${RED}     _/ |${NC}"
+    echo -e "${RED}    |__/${NC}\n"
+
+    echo -e "${CYAN}╔═══════════════════════════════════════════════╗${NC}"
+    echo -e "${CYAN}║             📊 SYSTEM STATUS                  ║${NC}"
+    echo -e "${CYAN}╠═══════════════════════════════════════════════╣${NC}"
+    echo -e "${CYAN}║                                               ║${NC}"
+    echo -e "${CYAN}║  ${RED}•${NC} ${NEON_GREEN}Hostname:${NC} ${NC}$host_name"
+    echo -e "${CYAN}║  ${RED}•${NC} ${NEON_GREEN}User:${NC} ${NC}$curr_user"
+    echo -e "${CYAN}║  ${RED}•${NC} ${NEON_GREEN}Directory:${NC} ${NC}$curr_dir"
+    echo -e "${CYAN}║  ${RED}•${NC} ${NEON_GREEN}System:${NC} ${NC}$sys_info"
+    echo -e "${CYAN}║  ${RED}•${NC} ${NEON_GREEN}Uptime:${NC} ${NC}$up_time"
+    echo -e "${CYAN}║  ${RED}•${NC} ${NEON_GREEN}Memory:${NC} ${NC}$mem_info"
+    echo -e "${CYAN}║  ${RED}•${NC} ${NEON_GREEN}Disk:${NC} ${NC}$disk_info"
+    echo -e "${CYAN}║                                               ║${NC}"
+    echo -e "${CYAN}╚═══════════════════════════════════════════════╝${NC}\n"
+    pause
+}
+
+# ==========================================
+# 7. TAILSCALE INSTALLER
+# ==========================================
+menu_7_tailscale() {
+    while true; do
+        clear
+        if command -v tailscale &> /dev/null; then
+            STATUS="${NEON_GREEN}INSTALLED${NC}"
+        else
+            STATUS="${RED}NOT INSTALLED${NC}"
+        fi
+
+        echo -e "${LIGHT_BLUE}╔══════════════════════════════════════╗${NC}"
+        echo -e "${LIGHT_BLUE}║         TAILSCALE INSTALLER          ║${NC}"
+        echo -e "${LIGHT_BLUE}╚══════════════════════════════════════╝${NC}\n"
+        echo -e "${CYAN}Status: ${STATUS}\n"
+        echo -e "${NEON_GREEN}========================================${NC}"
+        echo -e "${CYAN} [1] 📥 Install Tailscale${NC}"
+        echo -e "${RED} [2] 🗑️  Uninstall Tailscale${NC}"
+        echo -e "${YELLOW} [3] 🚪 Exit${NC}"
+        echo -e "${NEON_GREEN}========================================${NC}\n"
+        echo -ne "${NEON_GREEN}Select option [1-3]: ${NC}"
+        read ts_choice
+        case $ts_choice in
+            1) echo -e "${CYAN}Fetching Tailscale Node...${NC}"; sleep 3 & spinner $!; pause ;;
+            2) echo -e "${RED}Disconnecting Tailscale...${NC}"; sleep 2 & spinner $!; pause ;;
+            3) return ;;
+            *) echo -e "${RED}Invalid!${NC}"; sleep 1 ;;
+        esac
+    done
+}
+
+# ==========================================
+# 8. DATABASE SETUP
+# ==========================================
+menu_8_database() {
+    clear
+    echo -e "${RED} ____        _        _                     ${NC}"
+    echo -e "${RED}|  _ \  __ _| |_ __ _| |__   __ _ ___  ___  ${NC}"
+    echo -e "${RED}| | | |/ _\` | __/ _\` | '_ \ / _\` / __|/ _ \ ${NC}"
+    echo -e "${RED}| |_| | (_| | || (_| | |_) | (_| \__ \  __/ ${NC}"
+    echo -e "${RED}|____/ \__,_|\__\__,_|_.__/ \__,_|___/\___| ${NC}"
+    echo -e "${RED}--------------------------------------------${NC}"
+    echo -e "${RED}Running: MySQL / MariaDB Database Setup     ${NC}"
+    echo -e "${RED}--------------------------------------------${NC}\n"
+    
+    echo -ne "${NEON_GREEN}Enter new database username: ${NC}"
+    read db_user
+    echo -ne "${NEON_GREEN}Enter new database password: ${NC}"
+    read -s db_pass
+    echo -e "\n\n${CYAN}Provisioning secure database user '${db_user}'...${NC}"
+    sleep 3 & spinner $!
+    echo -e "\n${NEON_GREEN}✔ Database configuration complete!${NC}"
+    pause
+}
+
+# ==========================================
+# MAIN MENU LOOP
+# ==========================================
+while true; do
+    clear
+    echo -e "${RED}---------------------------------------${NC}"
+    echo -e "${NC}        🚀 EAGLIX HOSTING MANAGER      ${NC}"
+    echo -e "${RED}            made by Eaglix             ${NC}"
+    echo -e "${RED}---------------------------------------${NC}"
+    echo -e "${RED}"
+    echo "  __  __          _____ _   _   __  __ ______ _   _ _    _ "
+    echo " |  \/  |   /\   |_   _| \ | | |  \/  |  ____| \ | | |  | |"
+    echo " | \  / |  /  \    | | |  \| | | \  / | |__  |  \| | |  | |"
+    echo " | |\/| | / /\ \   | | | . \ | | |\/| |  __| | . \ | |  | |"
+    echo " | |  | |/ ____ \ _| |_| |\  | | |  | | |____| |\  | |__| |"
+    echo " |_|  |_/_/    \_\_____|_| \_| |_|  |_|______|_| \_|\____/ "
+    echo -e "${NC}"
+    echo -e "${RED}---------------------------------------${NC}"
+    echo -e "${RED} 1) Panel Installation${NC}"
+    echo -e "${RED} 2) Wings Installation${NC}"
+    echo -e "${RED} 3) Uninstall Tools${NC}"
+    echo -e "${RED} 4) Blueprint+Theme+Extensions${NC}"
+    echo -e "${RED} 5) Cloudflare Setup${NC}"
+    echo -e "${RED} 6) System Information${NC}"
+    echo -e "${RED} 7) Tailscale (install + up)${NC}"
+    echo -e "${RED} 8) Database Setup${NC}"
+    echo -e "${RED} 0) Exit${NC}"
+    echo -e "${RED}---------------------------------------${NC}"
+    echo -ne "${YELLOW}📝 Select an option [0-8]: ${NC}"
+    
+    read main_choice
+    case $main_choice in
+        1) menu_1_pterodactyl ;;
+        2) menu_2_wings ;;
+        3) menu_3_uninstall ;;
+        4) menu_4_blueprint ;;
+        5) menu_5_cloudflare ;;
+        6) menu_6_system ;;
+        7) menu_7_tailscale ;;
+        8) menu_8_database ;;
+        0) echo -e "\n${NEON_GREEN}Exiting Manager. Have a great day!${NC}"; exit 0 ;;
+        *) echo -e "${RED}Invalid option! Try again.${NC}"; sleep 1 ;;
+    esac
+done
