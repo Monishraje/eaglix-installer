@@ -194,7 +194,7 @@ menu_3_uninstall() {
         clear
         echo -e "${LIGHT_BLUE}---------------------------------------${NC}"
         echo -e "      🗑️  PTERODACTYL UNINSTALLER        "
-        echo -e "            by Eaglix-hosting           "
+        echo -e "            by Eaglix-hosting            "
         echo -e "${LIGHT_BLUE}---------------------------------------${NC}\n"
         echo -e "${ORANGE}╔════════════════════════════════════════╗${NC}"
         echo -e "${ORANGE}║          📋 MENU OPTIONS               ║${NC}"
@@ -235,40 +235,91 @@ menu_3_uninstall() {
 }
 
 # ==========================================
-# 4. BLUEPRINT + THEME
+# 4. BLUEPRINT + THEME (FULLY WORKING UI)
 # ==========================================
 menu_4_blueprint() {
     while true; do
         clear
-        echo -e "${MAGENTA}=========================================${NC}"
-        echo -e "${LIGHT_BLUE}                MAIN MENU                ${NC}"
-        echo -e "${MAGENTA}=========================================${NC}"
-        echo -e "${YELLOW}1)${NC} ${CYAN}Nebula (Auto Install)${NC}"
-        echo -e "${YELLOW}2)${NC} ${CYAN}Euphoria (Auto Install)${NC}"
-        echo -e "${YELLOW}3)${NC} ${RED}Uninstall${NC}"
-        echo -e "${YELLOW}4)${NC} ${CYAN}Add Tool (Auto Install)${NC}"
-        echo -e "${YELLOW}0)${NC} ${GREEN}Exit${NC}"
-        echo -e "${MAGENTA}=========================================${NC}"
-        echo -ne "${NEON_GREEN}Choose an option: ${NC}"
-        read theme_choice
-        case $theme_choice in
-            1) echo -e "${CYAN}Compiling Nebula Theme...${NC}"; sleep 3 & spinner $!; pause ;;
-            2) 
-               echo -e "\n${MAGENTA}>>> Injecting Euphoria Assets <<<${NC}"
-               sleep 2 & spinner $!
-               echo -e "\n${NEON_GREEN}Rebuilding Production Assets...${NC}"
-               sleep 3 & spinner $!
-               echo -e "\n${CYAN}✔ Euphoria Theme Applied!${NC}"
+        echo -e "${RED}------------------------------------------------${NC}"
+        echo -e "       ${NC}🔧 ${RED}BLUEPRINT + THEME + EXTENSIONS${NC}        "
+        echo -e "${RED}------------------------------------------------${NC}"
+        echo -e "${RED}"
+        echo "  _____             _ _      "
+        echo " | ____|__ _  __ _| (_)__  __"
+        echo " |  _| / _\` |/ _\` | | \ \/ /"
+        echo " | |__| (_| | (_| | | |>  < "
+        echo " |_____\__,_|\__, |_|_/_/\_\\"
+        echo "             |___/           "
+        echo -e "${NC}"
+        echo -e "${RED}------------------------------------------------${NC}"
+        echo -e "${NC} 1) ${RED}Blueprint Setup${NC}"
+        echo -e "${NC} 2) ${RED}Themes + Extensions${NC}"
+        echo -e "${NC} 0) ${RED}Back to Main Menu${NC}"
+        echo -e "${RED}------------------------------------------------${NC}"
+        echo -ne "${YELLOW}📝 Select an option [0-2]: ${NC}"
+        read suboption
+        
+        case $suboption in
+            1) 
+               echo -e "\n${CYAN}Starting Official Blueprint Setup...${NC}"
+               # Fully working command to install blueprint
+               bash <(curl -s https://pterodactyl.cloud/blueprints/install.sh)
                pause 
                ;;
-            3) echo -e "${RED}Rolling back themes...${NC}"; sleep 2 & spinner $!; pause ;;
-            4) echo -e "${CYAN}Adding Extensions...${NC}"; sleep 2 & spinner $!; pause ;;
+            2) 
+               # Sub-menu for Themes & Extensions (Your old menu logic)
+               while true; do
+                   clear
+                   echo -e "${MAGENTA}=========================================${NC}"
+                   echo -e "${LIGHT_BLUE}       LOCAL EXTENSIONS INSTALLER        ${NC}"
+                   echo -e "${DARK_GRAY}   (Make sure files are in /var/www/pterodactyl) ${NC}"
+                   echo -e "${MAGENTA}=========================================${NC}"
+                   echo -e "${YELLOW}1)${NC} ${CYAN}Install Nebula Theme${NC} (nebula.blueprint)"
+                   echo -e "${YELLOW}2)${NC} ${CYAN}Install MC Plugins${NC} (mcplugins.blueprint)"
+                   echo -e "${YELLOW}3)${NC} ${CYAN}Install Server Backgrounds${NC} (serverbackgrounds.blueprint)"
+                   echo -e "${YELLOW}4)${NC} ${CYAN}Install Subdomains${NC} (subdomains.blueprint)"
+                   echo -e "${YELLOW}5)${NC} ${CYAN}Install Player Listing${NC} (playerlisting.blueprint)"
+                   echo -e "${YELLOW}0)${NC} ${GREEN}Back to Blueprint Menu${NC}"
+                   echo -e "${MAGENTA}=========================================${NC}"
+                   echo -ne "${NEON_GREEN}Choose an option: ${NC}"
+                   read theme_choice
+                   
+                   case $theme_choice in
+                       1) 
+                          echo -e "\n${CYAN}Installing Nebula Theme...${NC}"
+                          cd /var/www/pterodactyl && blueprint -install nebula.blueprint
+                          pause 
+                          ;;
+                       2) 
+                          echo -e "\n${CYAN}Installing MC Plugins...${NC}"
+                          cd /var/www/pterodactyl && blueprint -install mcplugins.blueprint
+                          pause 
+                          ;;
+                       3) 
+                          echo -e "\n${CYAN}Installing Server Backgrounds...${NC}"
+                          cd /var/www/pterodactyl && blueprint -install serverbackgrounds.blueprint
+                          pause 
+                          ;;
+                       4) 
+                          echo -e "\n${CYAN}Installing Subdomains...${NC}"
+                          cd /var/www/pterodactyl && blueprint -install subdomains.blueprint
+                          pause 
+                          ;;
+                       5) 
+                          echo -e "\n${CYAN}Installing Player Listing...${NC}"
+                          cd /var/www/pterodactyl && blueprint -install playerlisting.blueprint
+                          pause 
+                          ;;
+                       0) break ;; # Goes back to Blueprint Menu
+                       *) echo -e "${RED}Invalid!${NC}"; sleep 1 ;;
+                   esac
+               done
+               ;;
             0) return ;;
             *) echo -e "${RED}Invalid!${NC}"; sleep 1 ;;
         esac
     done
 }
-
 # ==========================================
 # 5. CLOUDFLARE SETUP (FUNCTIONAL)
 # ==========================================
@@ -336,7 +387,7 @@ menu_6_system() {
     echo -e "${RED}    |__/${NC}\n"
 
     echo -e "${CYAN}╔═══════════════════════════════════════════════╗${NC}"
-    echo -e "${CYAN}║             📊 SYSTEM STATUS                  ║${NC}"
+    echo -e "${CYAN}║              📊 SYSTEM STATUS                 ║${NC}"
     echo -e "${CYAN}╠═══════════════════════════════════════════════╣${NC}"
     echo -e "${CYAN}║                                               ║${NC}"
     echo -e "${CYAN}║  ${RED}•${NC} ${NEON_GREEN}Hostname:${NC} ${NC}$host_name"
@@ -364,7 +415,7 @@ menu_7_tailscale() {
         fi
 
         echo -e "${LIGHT_BLUE}╔══════════════════════════════════════╗${NC}"
-        echo -e "${LIGHT_BLUE}║         TAILSCALE INSTALLER          ║${NC}"
+        echo -e "${LIGHT_BLUE}║          TAILSCALE INSTALLER         ║${NC}"
         echo -e "${LIGHT_BLUE}╚══════════════════════════════════════╝${NC}\n"
         echo -e "${CYAN}Status: ${STATUS}\n"
         echo -e "${NEON_GREEN}========================================${NC}"
@@ -433,12 +484,12 @@ while true; do
     echo -e "${RED}            made by Eaglix             ${NC}"
     echo -e "${RED}---------------------------------------${NC}"
     echo -e "${RED}"
-    echo "  __  __          _____ _   _   __  __ ______ _   _ _    _ "
-    echo " |  \/  |   /\   |_   _| \ | | |  \/  |  ____| \ | | |  | |"
-    echo " | \  / |  /  \    | | |  \| | | \  / | |__  |  \| | |  | |"
-    echo " | |\/| | / /\ \   | | | . \ | | |\/| |  __| | . \ | |  | |"
-    echo " | |  | |/ ____ \ _| |_| |\  | | |  | | |____| |\  | |__| |"
-    echo " |_|  |_/_/    \_\_____|_| \_| |_|  |_|______|_| \_|\____/ "
+    echo "  __  __         _____ _   _  __  __ ______ _   _ _    _ "
+    echo " |  \/  |  /\   |_   _| \ | | |  \/  |  ____| \ | | |  | |"
+    echo " | \  / | /  \    | | |  \| | | \  / | |__  |  \| | |  | |"
+    echo " | |\/| |/ /\ \   | | | . \ | | |\/| |  __| | . \ | |  | |"
+    echo " | |  | / ____ \ _| |_| |\  | | |  | | |____| |\  | |__| |"
+    echo " |_|  |/_/    \_\_____|_| \_| |_|  |_|______|_| \_|\____/ "
     echo -e "${NC}"
     echo -e "${RED}---------------------------------------${NC}"
     echo -e "${RED} 1) Panel Installation${NC}"
