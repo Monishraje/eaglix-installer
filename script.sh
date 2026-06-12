@@ -264,10 +264,12 @@ menu_4_blueprint() {
                echo -e "\n${CYAN}Starting Official Blueprint Setup...${NC}"
                cd /var/www/pterodactyl || { echo -e "${RED}Error: Pterodactyl directory not found!${NC}"; pause; break; }
                
-               echo -e "${YELLOW}[1/3] Installing Dependencies (NodeJS, Yarn, Zip)...${NC}"
+               echo -e "${YELLOW}[1/3] Installing Dependencies (NodeJS v22, Yarn, Zip)...${NC}"
                apt-get update -y > /dev/null 2>&1
                apt-get install -y curl zip unzip > /dev/null 2>&1
-               curl -fsSL https://deb.nodesource.com/setup_20.x | bash - > /dev/null 2>&1
+               
+               # Yahan setup_20.x ki jagah setup_22.x kar diya hai
+               curl -fsSL https://deb.nodesource.com/setup_22.x | bash - > /dev/null 2>&1
                apt-get install -y nodejs > /dev/null 2>&1
                npm install -g yarn > /dev/null 2>&1
                
