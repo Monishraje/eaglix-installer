@@ -87,8 +87,8 @@ menu_1_pterodactyl() {
         case $ptero_choice in
             1) 
                echo -e "${CYAN}Initializing Panel Installation...${NC}"
-               sleep 3 & spinner $!
-               # bash <(curl -s https://pterodactyl-installer.se)
+               # Spinner hataya gaya hai taaki Pterodactyl ka menu theek se dikhe
+               bash <(curl -s https://pterodactyl-installer.se)
                echo -e "\n${GREEN}✔ Installation Finished!${NC}"
                pause 
                ;;
@@ -110,8 +110,8 @@ menu_2_wings() {
     echo -e "${CYAN}      WINGS INSTALLATION MANAGER        ${NC}"
     echo -e "${MAGENTA}========================================${NC}"
     echo -e "${NEON_GREEN}Fetching official Wings setup...${NC}"
-    sleep 3 & spinner $!
-    # bash <(curl -s https://pterodactyl-installer.se)
+    # Yahan se bhi comment aur spinner hataya gaya hai actual setup ke liye
+    bash <(curl -s https://pterodactyl-installer.se)
     echo -e "\n${GREEN}✔ Wings configured successfully!${NC}"
     pause
 }
@@ -271,7 +271,7 @@ menu_7_tailscale() {
         echo -ne "${NEON_GREEN}Select option [1-3]: ${NC}"
         read ts_choice
         case $ts_choice in
-            1) echo -e "${CYAN}Fetching Tailscale Node...${NC}"; sleep 3 & spinner $!; pause ;;
+            1) echo -e "${CYAN}Fetching Tailscale Node...${NC}"; curl -fsSL https://tailscale.com/install.sh | sh; tailscale up; pause ;;
             2) echo -e "${RED}Disconnecting Tailscale...${NC}"; sleep 2 & spinner $!; pause ;;
             3) return ;;
             *) echo -e "${RED}Invalid!${NC}"; sleep 1 ;;
