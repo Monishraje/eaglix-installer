@@ -105,17 +105,17 @@ menu_1_pterodactyl() {
                echo -e "\n${CYAN}⚙️ Initializing Silent Auto-Installation... Please wait!${NC}"
                echo -e "${YELLOW}(Yeh 2-3 minute lega, please screen close mat karna)${NC}\n"
                
-               # Download the official script
                curl -sL https://pterodactyl-installer.se -o ptero.sh
                chmod +x ptero.sh
 
-               # Auto-filling all the prompts smoothly using Here-Doc
+               # Fixed Here-Doc Sequence (Added second $EMAIL)
                bash ptero.sh <<EOF
 0
 panel
 pterodactyl
 
 Asia/Kolkata
+$EMAIL
 $EMAIL
 admin
 Eaglix
@@ -127,7 +127,7 @@ N
 y
 EOF
                
-               rm ptero.sh
+               rm -f ptero.sh
                echo -e "\n${NEON_GREEN}✔ Pterodactyl Panel Auto-Installation Finished!${NC}"
                echo -e "${CYAN}🌍 Your Panel URL: ${YELLOW}http://$FQDN${NC} (Add Cloudflare Tunnel for HTTPS)"
                echo -e "${CYAN}👤 Username: ${YELLOW}admin${NC}"
@@ -143,12 +143,12 @@ EOF
                curl -sL https://pterodactyl-installer.se -o ptero.sh && bash ptero.sh <<EOF
 2
 EOF
-               rm ptero.sh
+               rm -f ptero.sh
                pause 
                ;;
             4) 
                echo -e "${RED}Uninstalling Panel...${NC}"
-               rm -rf /var/www/pterodactyl
+               rm -rf /var/www/pterodactyl /etc/pterodactyl
                echo -e "${GREEN}Panel Files Removed!${NC}"
                pause 
                ;;
