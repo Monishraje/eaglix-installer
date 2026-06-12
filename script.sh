@@ -122,9 +122,9 @@ Eaglix
 Admin
 $PASSWORD
 $FQDN
-y
-N
-y
+n
+n
+n
 y
 no
 EOF
