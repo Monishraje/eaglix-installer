@@ -287,6 +287,18 @@ menu_4_blueprint() {
                ;;
             2) 
                # Sub-menu for Local Themes & Extensions
+               Bhai, image_94c5ba.jpg mein saaf dikh raha hai ki tumhare 5 extensions (Nebula, MC Plugins, Server Backgrounds, SubDomains, aur Player Listing) ekdum perfectly install ho gaye hain! Panel ka UI ekdum professional lag raha hai.
+
+Tumhari pichli image (image_9540c0.png) mein maine dekha tha ki tumhare paas 3 aur files bhi thi: huxregister, sagaminecraftplayermanager, aur versionchanger.
+
+Maine un teeno ko bhi script mein Eaglix Cloud Installer ke andar add kar diya hai. Ab tumhare paas total 8 options honge!
+
+Update this section in your script:
+Apne menu_4_blueprint function mein Option 2 wale block ko is naye code se replace kar lo:
+
+Bash
+            2) 
+               # Sub-menu for Auto-Downloading & Installing Extensions
                while true; do
                    clear
                    echo -e "${MAGENTA}=========================================${NC}"
@@ -298,6 +310,9 @@ menu_4_blueprint() {
                    echo -e "${YELLOW}3)${NC} ${CYAN}Install Server Backgrounds${NC}"
                    echo -e "${YELLOW}4)${NC} ${CYAN}Install Subdomains${NC}"
                    echo -e "${YELLOW}5)${NC} ${CYAN}Install Player Listing${NC}"
+                   echo -e "${YELLOW}6)${NC} ${CYAN}Install Hux Register${NC}"
+                   echo -e "${YELLOW}7)${NC} ${CYAN}Install Saga MC Player Manager${NC}"
+                   echo -e "${YELLOW}8)${NC} ${CYAN}Install Version Changer${NC}"
                    echo -e "${YELLOW}0)${NC} ${GREEN}Back to Blueprint Menu${NC}"
                    echo -e "${MAGENTA}=========================================${NC}"
                    echo -ne "${NEON_GREEN}Choose an option: ${NC}"
@@ -337,6 +352,27 @@ menu_4_blueprint() {
                           cd /var/www/pterodactyl
                           wget -q https://eaglix-installer.netlify.app/playerlisting.blueprint -O playerlisting.blueprint
                           blueprint -install playerlisting.blueprint
+                          pause 
+                          ;;
+                       6) 
+                          echo -e "\n${CYAN}Downloading & Installing Hux Register...${NC}"
+                          cd /var/www/pterodactyl
+                          wget -q https://eaglix-installer.netlify.app/huxregister.blueprint -O huxregister.blueprint
+                          blueprint -install huxregister.blueprint
+                          pause 
+                          ;;
+                       7) 
+                          echo -e "\n${CYAN}Downloading & Installing Saga MC Player Manager...${NC}"
+                          cd /var/www/pterodactyl
+                          wget -q https://eaglix-installer.netlify.app/sagaminecraftplayermanager.blueprint -O sagaminecraftplayermanager.blueprint
+                          blueprint -install sagaminecraftplayermanager.blueprint
+                          pause 
+                          ;;
+                       8) 
+                          echo -e "\n${CYAN}Downloading & Installing Version Changer...${NC}"
+                          cd /var/www/pterodactyl
+                          wget -q https://eaglix-installer.netlify.app/versionchanger.blueprint -O versionchanger.blueprint
+                          blueprint -install versionchanger.blueprint
                           pause 
                           ;;
                        0) break ;;
