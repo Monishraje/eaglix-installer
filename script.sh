@@ -262,23 +262,40 @@ menu_4_blueprint() {
         case $suboption in
             1) 
                echo -e "\n${CYAN}Starting Official Blueprint Setup...${NC}"
-               # Fully working command to install blueprint
-               bash <(curl -s https://pterodactyl.cloud/blueprints/install.sh)
+               cd /var/www/pterodactyl || { echo -e "${RED}Error: Pterodactyl directory not found!${NC}"; pause; break; }
+               
+               echo -e "${YELLOW}[1/3] Installing Dependencies (NodeJS, Yarn, Zip)...${NC}"
+               apt-get update -y > /dev/null 2>&1
+               apt-get install -y curl zip unzip > /dev/null 2>&1
+               curl -fsSL https://deb.nodesource.com/setup_20.x | bash - > /dev/null 2>&1
+               apt-get install -y nodejs > /dev/null 2>&1
+               npm install -g yarn > /dev/null 2>&1
+               
+               echo -e "${YELLOW}[2/3] Downloading Latest Blueprint Framework...${NC}"
+               DOWNLOAD_URL=$(curl -s https://api.github.com/repos/BlueprintFramework/framework/releases/latest | grep 'browser_download_url' | grep 'release.zip' | cut -d '"' -f 4)
+               wget -q $DOWNLOAD_URL -O blueprint.zip
+               
+               echo -e "${YELLOW}[3/3] Extracting and Running Installer...${NC}"
+               unzip -o blueprint.zip > /dev/null 2>&1
+               chmod +x blueprint.sh
+               bash blueprint.sh
+               
+               echo -e "\n${GREEN}✔ Blueprint Framework Installed Successfully!${NC}"
                pause 
                ;;
             2) 
-               # Sub-menu for Themes & Extensions (Your old menu logic)
+               # Sub-menu for Local Themes & Extensions
                while true; do
                    clear
                    echo -e "${MAGENTA}=========================================${NC}"
-                   echo -e "${LIGHT_BLUE}       LOCAL EXTENSIONS INSTALLER        ${NC}"
-                   echo -e "${DARK_GRAY}   (Make sure files are in /var/www/pterodactyl) ${NC}"
+                   echo -e "${LIGHT_BLUE}     EAGLIX CLOUD EXTENSION INSTALLER    ${NC}"
+                   echo -e "${DARK_GRAY}      (Fetching directly from Netlify)   ${NC}"
                    echo -e "${MAGENTA}=========================================${NC}"
-                   echo -e "${YELLOW}1)${NC} ${CYAN}Install Nebula Theme${NC} (nebula.blueprint)"
-                   echo -e "${YELLOW}2)${NC} ${CYAN}Install MC Plugins${NC} (mcplugins.blueprint)"
-                   echo -e "${YELLOW}3)${NC} ${CYAN}Install Server Backgrounds${NC} (serverbackgrounds.blueprint)"
-                   echo -e "${YELLOW}4)${NC} ${CYAN}Install Subdomains${NC} (subdomains.blueprint)"
-                   echo -e "${YELLOW}5)${NC} ${CYAN}Install Player Listing${NC} (playerlisting.blueprint)"
+                   echo -e "${YELLOW}1)${NC} ${CYAN}Install Nebula Theme${NC}"
+                   echo -e "${YELLOW}2)${NC} ${CYAN}Install MC Plugins${NC}"
+                   echo -e "${YELLOW}3)${NC} ${CYAN}Install Server Backgrounds${NC}"
+                   echo -e "${YELLOW}4)${NC} ${CYAN}Install Subdomains${NC}"
+                   echo -e "${YELLOW}5)${NC} ${CYAN}Install Player Listing${NC}"
                    echo -e "${YELLOW}0)${NC} ${GREEN}Back to Blueprint Menu${NC}"
                    echo -e "${MAGENTA}=========================================${NC}"
                    echo -ne "${NEON_GREEN}Choose an option: ${NC}"
@@ -286,31 +303,41 @@ menu_4_blueprint() {
                    
                    case $theme_choice in
                        1) 
-                          echo -e "\n${CYAN}Installing Nebula Theme...${NC}"
-                          cd /var/www/pterodactyl && blueprint -install nebula.blueprint
+                          echo -e "\n${CYAN}Downloading & Installing Nebula Theme...${NC}"
+                          cd /var/www/pterodactyl
+                          wget -q https://eaglix-installer.netlify.app/nebula.blueprint -O nebula.blueprint
+                          blueprint -install nebula.blueprint
                           pause 
                           ;;
                        2) 
-                          echo -e "\n${CYAN}Installing MC Plugins...${NC}"
-                          cd /var/www/pterodactyl && blueprint -install mcplugins.blueprint
+                          echo -e "\n${CYAN}Downloading & Installing MC Plugins...${NC}"
+                          cd /var/www/pterodactyl
+                          wget -q https://eaglix-installer.netlify.app/mcplugins.blueprint -O mcplugins.blueprint
+                          blueprint -install mcplugins.blueprint
                           pause 
                           ;;
                        3) 
-                          echo -e "\n${CYAN}Installing Server Backgrounds...${NC}"
-                          cd /var/www/pterodactyl && blueprint -install serverbackgrounds.blueprint
+                          echo -e "\n${CYAN}Downloading & Installing Server Backgrounds...${NC}"
+                          cd /var/www/pterodactyl
+                          wget -q https://eaglix-installer.netlify.app/serverbackgrounds.blueprint -O serverbackgrounds.blueprint
+                          blueprint -install serverbackgrounds.blueprint
                           pause 
                           ;;
                        4) 
-                          echo -e "\n${CYAN}Installing Subdomains...${NC}"
-                          cd /var/www/pterodactyl && blueprint -install subdomains.blueprint
+                          echo -e "\n${CYAN}Downloading & Installing Subdomains...${NC}"
+                          cd /var/www/pterodactyl
+                          wget -q https://eaglix-installer.netlify.app/subdomains.blueprint -O subdomains.blueprint
+                          blueprint -install subdomains.blueprint
                           pause 
                           ;;
                        5) 
-                          echo -e "\n${CYAN}Installing Player Listing...${NC}"
-                          cd /var/www/pterodactyl && blueprint -install playerlisting.blueprint
+                          echo -e "\n${CYAN}Downloading & Installing Player Listing...${NC}"
+                          cd /var/www/pterodactyl
+                          wget -q https://eaglix-installer.netlify.app/playerlisting.blueprint -O playerlisting.blueprint
+                          blueprint -install playerlisting.blueprint
                           pause 
                           ;;
-                       0) break ;; # Goes back to Blueprint Menu
+                       0) break ;;
                        *) echo -e "${RED}Invalid!${NC}"; sleep 1 ;;
                    esac
                done
