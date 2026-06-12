@@ -300,9 +300,10 @@ menu_4_blueprint() {
                    echo -e "${YELLOW}6)${NC} ${CYAN}Install Hux Register${NC}"
                    echo -e "${YELLOW}7)${NC} ${CYAN}Install Saga MC Player Manager${NC}"
                    echo -e "${YELLOW}8)${NC} ${CYAN}Install Version Changer${NC}"
-                   echo -e "${YELLOW}0)${NC} ${GREEN}Back to Blueprint Menu${NC}"
+                   echo -e "${NEON_GREEN}9) 🚀 Install ALL Extensions (Bulk Install)${NC}"
+                   echo -e "${YELLOW}0)${NC} ${RED}Back to Blueprint Menu${NC}"
                    echo -e "${MAGENTA}=========================================${NC}"
-                   echo -ne "${NEON_GREEN}Choose an option: ${NC}"
+                   echo -ne "${NEON_GREEN}Choose an option [0-9]: ${NC}"
                    read theme_choice
                    
                    case $theme_choice in
@@ -337,6 +338,36 @@ menu_4_blueprint() {
                        8) 
                           echo -e "\n${CYAN}Downloading & Installing Version Changer...${NC}"
                           cd /var/www/pterodactyl && wget -q https://eaglix-installer.netlify.app/versionchanger.blueprint -O versionchanger.blueprint && blueprint -install versionchanger.blueprint
+                          pause ;;
+                       9) 
+                          echo -e "\n${CYAN}🚀 Starting Bulk Installation of ALL 8 Extensions... This will take a few minutes!${NC}"
+                          cd /var/www/pterodactyl
+                          
+                          echo -e "\n${YELLOW}[1/8] Installing Nebula Theme...${NC}"
+                          wget -q https://eaglix-installer.netlify.app/nebula.blueprint -O nebula.blueprint && blueprint -install nebula.blueprint
+                          
+                          echo -e "\n${YELLOW}[2/8] Installing MC Plugins...${NC}"
+                          wget -q https://eaglix-installer.netlify.app/mcplugins.blueprint -O mcplugins.blueprint && blueprint -install mcplugins.blueprint
+                          
+                          echo -e "\n${YELLOW}[3/8] Installing Server Backgrounds...${NC}"
+                          wget -q https://eaglix-installer.netlify.app/serverbackgrounds.blueprint -O serverbackgrounds.blueprint && blueprint -install serverbackgrounds.blueprint
+                          
+                          echo -e "\n${YELLOW}[4/8] Installing Subdomains...${NC}"
+                          wget -q https://eaglix-installer.netlify.app/subdomains.blueprint -O subdomains.blueprint && blueprint -install subdomains.blueprint
+                          
+                          echo -e "\n${YELLOW}[5/8] Installing Player Listing...${NC}"
+                          wget -q https://eaglix-installer.netlify.app/playerlisting.blueprint -O playerlisting.blueprint && blueprint -install playerlisting.blueprint
+                          
+                          echo -e "\n${YELLOW}[6/8] Installing Hux Register...${NC}"
+                          wget -q https://eaglix-installer.netlify.app/huxregister.blueprint -O huxregister.blueprint && blueprint -install huxregister.blueprint
+                          
+                          echo -e "\n${YELLOW}[7/8] Installing Saga MC Player Manager...${NC}"
+                          wget -q https://eaglix-installer.netlify.app/sagaminecraftplayermanager.blueprint -O sagaminecraftplayermanager.blueprint && blueprint -install sagaminecraftplayermanager.blueprint
+                          
+                          echo -e "\n${YELLOW}[8/8] Installing Version Changer...${NC}"
+                          wget -q https://eaglix-installer.netlify.app/versionchanger.blueprint -O versionchanger.blueprint && blueprint -install versionchanger.blueprint
+                          
+                          echo -e "\n${GREEN}✔ All 8 Extensions Installed Successfully!${NC}"
                           pause ;;
                        0) break ;;
                        *) echo -e "${RED}Invalid!${NC}"; sleep 1 ;;
