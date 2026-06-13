@@ -304,7 +304,7 @@ menu_4_blueprint() {
                    echo -e "${NEON_GREEN}10) 🚀 Install ALL Extensions (Bulk Install)${NC}"
                    echo -e "${YELLOW}0)${NC} ${RED}Back to Blueprint Menu${NC}"
                    echo -e "${MAGENTA}=========================================${NC}"
-                   echo -ne "${NEON_GREEN}Choose an option [0-9]: ${NC}"
+                   echo -ne "${NEON_GREEN}Choose an option [0-10]: ${NC}"
                    read theme_choice
                    
                    case $theme_choice in
