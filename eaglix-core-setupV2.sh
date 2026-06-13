@@ -300,7 +300,8 @@ menu_4_blueprint() {
                    echo -e "${YELLOW}6)${NC} ${CYAN}Install Hux Register${NC}"
                    echo -e "${YELLOW}7)${NC} ${CYAN}Install Saga MC Player Manager${NC}"
                    echo -e "${YELLOW}8)${NC} ${CYAN}Install Version Changer${NC}"
-                   echo -e "${NEON_GREEN}9) 🚀 Install ALL Extensions (Bulk Install)${NC}"
+                   echo -e "${YELLOW}9)${NC} ${CYAN}Install Mc Logs${NC}"
+                   echo -e "${NEON_GREEN}10) 🚀 Install ALL Extensions (Bulk Install)${NC}"
                    echo -e "${YELLOW}0)${NC} ${RED}Back to Blueprint Menu${NC}"
                    echo -e "${MAGENTA}=========================================${NC}"
                    echo -ne "${NEON_GREEN}Choose an option [0-9]: ${NC}"
@@ -340,7 +341,11 @@ menu_4_blueprint() {
                           cd /var/www/pterodactyl && wget -q https://eaglix-installer.netlify.app/versionchanger.blueprint -O versionchanger.blueprint && blueprint -install versionchanger.blueprint
                           pause ;;
                        9) 
-                          echo -e "\n${CYAN}🚀 Starting Bulk Installation of ALL 8 Extensions... This will take a few minutes!${NC}"
+                          echo -e "\n${CYAN}Downloading & Installing Version Changer...${NC}"
+                          cd /var/www/pterodactyl && wget -q https://eaglix-installer.netlify.app/mclogs.blueprint -O mclogs.blueprint && blueprint -install mclogs.blueprint
+                          pause ;;
+                       10) 
+                          echo -e "\n${CYAN}🚀 Starting Bulk Installation of ALL 9 Extensions... This will take a few minutes!${NC}"
                           cd /var/www/pterodactyl
                           
                           echo -e "\n${YELLOW}[1/8] Installing Nebula Theme...${NC}"
