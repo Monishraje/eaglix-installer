@@ -341,7 +341,7 @@ menu_4_blueprint() {
                           cd /var/www/pterodactyl && wget -q https://eaglix-installer.netlify.app/versionchanger.blueprint -O versionchanger.blueprint && blueprint -install versionchanger.blueprint
                           pause ;;
                        9) 
-                          echo -e "\n${CYAN}Downloading & Installing Version Changer...${NC}"
+                          echo -e "\n${CYAN}Downloading & Installing MC Logs...${NC}"
                           cd /var/www/pterodactyl && wget -q https://eaglix-installer.netlify.app/mclogs.blueprint -O mclogs.blueprint && blueprint -install mclogs.blueprint
                           pause ;;
                        10) 
