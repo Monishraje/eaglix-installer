@@ -301,10 +301,17 @@ menu_4_blueprint() {
                    echo -e "${YELLOW}7)${NC} ${CYAN}Install Saga MC Player Manager${NC}"
                    echo -e "${YELLOW}8)${NC} ${CYAN}Install Version Changer${NC}"
                    echo -e "${YELLOW}9)${NC} ${CYAN}Install Mc Logs${NC}"
-                   echo -e "${NEON_GREEN}10) 🚀 Install ALL Extensions (Bulk Install)${NC}"
+                   echo -e "${YELLOW}10)${NC} ${CYAN}Install Custom Server Sort${NC}"
+                   echo -e "${YELLOW}11)${NC} ${CYAN}Install Laravel Logs${NC}"
+                   echo -e "${YELLOW}12)${NC} ${CYAN}Install Minecraft Player Manager${NC}"
+                   echo -e "${YELLOW}13)${NC} ${CYAN}Install Minecraft Plugin Manager${NC}"
+                   echo -e "${YELLOW}14)${NC} ${CYAN}Install Monaco Editor${NC}"
+                   echo -e "${YELLOW}15)${NC} ${CYAN}Install Refresh theme${NC}"
+                   echo -e "${YELLOW}16)${NC} ${CYAN}Install Resource Manager${NC}"
+                   echo -e "${NEON_GREEN}17) 🚀 Install ALL Extensions (Bulk Install)${NC}"
                    echo -e "${YELLOW}0)${NC} ${RED}Back to Blueprint Menu${NC}"
                    echo -e "${MAGENTA}=========================================${NC}"
-                   echo -ne "${NEON_GREEN}Choose an option [0-10]: ${NC}"
+                   echo -ne "${NEON_GREEN}Choose an option [0-17]: ${NC}"
                    read theme_choice
                    
                    case $theme_choice in
@@ -345,34 +352,86 @@ menu_4_blueprint() {
                           cd /var/www/pterodactyl && wget -q https://eaglix-installer.netlify.app/mclogs.blueprint -O mclogs.blueprint && blueprint -install mclogs.blueprint
                           pause ;;
                        10) 
-                          echo -e "\n${CYAN}🚀 Starting Bulk Installation of ALL 9 Extensions... This will take a few minutes!${NC}"
+                          echo -e "\n${CYAN}Downloading & Installing Custom Server Sort...${NC}"
+                          cd /var/www/pterodactyl && wget -q https://eaglix-installer.netlify.app/customserversort.blueprint -O customserversort.blueprint && blueprint -install customserversort.blueprint
+                          pause ;;
+                       11) 
+                          echo -e "\n${CYAN}Downloading & Installing Laravel Logs...${NC}"
+                          cd /var/www/pterodactyl && wget -q https://eaglix-installer.netlify.app/laravellogs.blueprint -O laravellogs.blueprint && blueprint -install laravellogs.blueprint
+                          pause ;;
+                       12) 
+                          echo -e "\n${CYAN}Downloading & Installing Minecraft Player Manager...${NC}"
+                          cd /var/www/pterodactyl && wget -q https://eaglix-installer.netlify.app/minecraftplayermanager.blueprint -O minecraftplayermanager.blueprint && blueprint -install minecraftplayermanager.blueprint
+                          pause ;;
+                       13) 
+                          echo -e "\n${CYAN}Downloading & Installing Minecraft Plugin Manager...${NC}"
+                          cd /var/www/pterodactyl && wget -q https://eaglix-installer.netlify.app/minecraftpluginmanager.blueprint -O minecraftpluginmanager.blueprint && blueprint -install minecraftpluginmanager.blueprint
+                          pause ;;
+                       14) 
+                          echo -e "\n${CYAN}Downloading & Installing Monaco Editor...${NC}"
+                          cd /var/www/pterodactyl && wget -q https://eaglix-installer.netlify.app/monacoeditor.blueprint -O monacoeditor.blueprint && blueprint -install monacoeditor.blueprint
+                          pause ;;
+                       15) 
+                          echo -e "\n${CYAN}Downloading & Installing Refresh Theme...${NC}"
+                          cd /var/www/pterodactyl && wget -q https://eaglix-installer.netlify.app/refreshtheme.blueprint -O refreshtheme.blueprint && blueprint -install refreshtheme.blueprint
+                          pause ;;
+                       16) 
+                          echo -e "\n${CYAN}Downloading & Installing Resource Manager...${NC}"
+                          cd /var/www/pterodactyl && wget -q https://eaglix-installer.netlify.app/resourcemanager.blueprint -O resourcemanager.blueprint && blueprint -install resourcemanager.blueprint
+                          pause ;;
+                       17) 
+                          echo -e "\n${CYAN}🚀 Starting Bulk Installation of ALL 16 Extensions... This will take a few minutes!${NC}"
                           cd /var/www/pterodactyl
                           
-                          echo -e "\n${YELLOW}[1/8] Installing Nebula Theme...${NC}"
+                          echo -e "\n${YELLOW}[1/16] Installing Nebula Theme...${NC}"
                           wget -q https://eaglix-installer.netlify.app/nebula.blueprint -O nebula.blueprint && blueprint -install nebula.blueprint
                           
-                          echo -e "\n${YELLOW}[2/8] Installing MC Plugins...${NC}"
+                          echo -e "\n${YELLOW}[2/16] Installing MC Plugins...${NC}"
                           wget -q https://eaglix-installer.netlify.app/mcplugins.blueprint -O mcplugins.blueprint && blueprint -install mcplugins.blueprint
                           
-                          echo -e "\n${YELLOW}[3/8] Installing Server Backgrounds...${NC}"
+                          echo -e "\n${YELLOW}[3/16] Installing Server Backgrounds...${NC}"
                           wget -q https://eaglix-installer.netlify.app/serverbackgrounds.blueprint -O serverbackgrounds.blueprint && blueprint -install serverbackgrounds.blueprint
                           
-                          echo -e "\n${YELLOW}[4/8] Installing Subdomains...${NC}"
+                          echo -e "\n${YELLOW}[4/16] Installing Subdomains...${NC}"
                           wget -q https://eaglix-installer.netlify.app/subdomains.blueprint -O subdomains.blueprint && blueprint -install subdomains.blueprint
                           
-                          echo -e "\n${YELLOW}[5/8] Installing Player Listing...${NC}"
+                          echo -e "\n${YELLOW}[5/16] Installing Player Listing...${NC}"
                           wget -q https://eaglix-installer.netlify.app/playerlisting.blueprint -O playerlisting.blueprint && blueprint -install playerlisting.blueprint
                           
-                          echo -e "\n${YELLOW}[6/8] Installing Hux Register...${NC}"
+                          echo -e "\n${YELLOW}[6/16] Installing Hux Register...${NC}"
                           wget -q https://eaglix-installer.netlify.app/huxregister.blueprint -O huxregister.blueprint && blueprint -install huxregister.blueprint
                           
-                          echo -e "\n${YELLOW}[7/8] Installing Saga MC Player Manager...${NC}"
+                          echo -e "\n${YELLOW}[7/16] Installing Saga MC Player Manager...${NC}"
                           wget -q https://eaglix-installer.netlify.app/sagaminecraftplayermanager.blueprint -O sagaminecraftplayermanager.blueprint && blueprint -install sagaminecraftplayermanager.blueprint
                           
-                          echo -e "\n${YELLOW}[8/8] Installing Version Changer...${NC}"
+                          echo -e "\n${YELLOW}[8/16] Installing Version Changer...${NC}"
                           wget -q https://eaglix-installer.netlify.app/versionchanger.blueprint -O versionchanger.blueprint && blueprint -install versionchanger.blueprint
+
+                          echo -e "\n${YELLOW}[9/16] Installing MC Logs...${NC}"
+                          wget -q https://eaglix-installer.netlify.app/mclogs.blueprint -O mclogs.blueprint && blueprint -install mclogs.blueprint
+
+                          echo -e "\n${YELLOW}[10/16] Installing Custom Server Sort...${NC}"
+                          wget -q https://eaglix-installer.netlify.app/customserversort.blueprint -O customserversort.blueprint && blueprint -install customserversort.blueprint
+
+                          echo -e "\n${YELLOW}[11/16] Installing Laravel Logs...${NC}"
+                          wget -q https://eaglix-installer.netlify.app/laravellogs.blueprint -O laravellogs.blueprint && blueprint -install laravellogs.blueprint
+
+                          echo -e "\n${YELLOW}[12/16] Installing Minecraft Player Manager...${NC}"
+                          wget -q https://eaglix-installer.netlify.app/minecraftplayermanager.blueprint -O minecraftplayermanager.blueprint && blueprint -install minecraftplayermanager.blueprint
+
+                          echo -e "\n${YELLOW}[13/16] Installing Minecraft Plugin Manager...${NC}"
+                          wget -q https://eaglix-installer.netlify.app/minecraftpluginmanager.blueprint -O minecraftpluginmanager.blueprint && blueprint -install minecraftpluginmanager.blueprint
+
+                          echo -e "\n${YELLOW}[14/16] Installing Monaco Editor...${NC}"
+                          wget -q https://eaglix-installer.netlify.app/monacoeditor.blueprint -O monacoeditor.blueprint && blueprint -install monacoeditor.blueprint
+
+                          echo -e "\n${YELLOW}[15/16] Installing Monaco Editor...${NC}"
+                          wget -q https://eaglix-installer.netlify.app/refreshtheme.blueprint -O refreshtheme.blueprint && blueprint -install refreshtheme.blueprint
+
+                          echo -e "\n${YELLOW}[16/16] Installing Monaco Editor...${NC}"
+                          wget -q https://eaglix-installer.netlify.app/resourcemanager.blueprint -O resourcemanager.blueprint && blueprint -install resourcemanager.blueprint
                           
-                          echo -e "\n${GREEN}✔ All 8 Extensions Installed Successfully!${NC}"
+                          echo -e "\n${GREEN}✔ All 16 Extensions Installed Successfully!${NC}"
                           pause ;;
                        0) break ;;
                        *) echo -e "${RED}Invalid!${NC}"; sleep 1 ;;
